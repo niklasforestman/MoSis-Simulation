@@ -12,6 +12,9 @@ population who can't be relied on recovering from a disease on their own. I can
 also expand the program to collect data from different iterations at different
 values of infected and isolation to then graph in Matlab to better depict the
 effect of isolation.
+test
+das ist einn Test für GitKRaaaaken
+
 """
 
 #   === INIT ===

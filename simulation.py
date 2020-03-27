@@ -1,19 +1,10 @@
 """
 Program: Coronavirus Simulation
-Author: Nathan Verghis
-Date: March 18, 2020
-I created this program in light of the coronavirus epidemic. I was inspired by
-the vast confusion people had surrounding the need for isolation. I felt that by
-creating this program, it could better teach people about why isolation is so
-important in preventing the spread of a virus. Plans on expanding in the future
-could involve creating a special member of the People class (compromised person)
-to show the effectiveness of herd immunity on protecting a member of the
-population who can't be relied on recovering from a disease on their own. I can
-also expand the program to collect data from different iterations at different
-values of infected and isolation to then graph in Matlab to better depict the
-effect of isolation.
-test
-das ist einn Test für GitKRaaaaken
+Origin Author: Nathan Verghis
+
+New Program Name
+Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
+
 
 """
 
@@ -28,7 +19,7 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
-scale = 800 #Skalierung
+scale = 500 #Skalierung
 up = 1.2   #Bewegungsgeschwindigkeit der Personen
 
 popsize = scale
@@ -41,13 +32,13 @@ result = True
 
 if dev_mode == True:
 
-    isolation = 0#100
-    infected = 2
-    infection_chance = 60#100
-    recovery = 8
-    heavy_case = 5#2
-    incubation_time = 6
-    superspreader = 10
+    isolation = 0 #Standardeinstellung: 0
+    infected = 20 #Standardeinstellung: 2
+    infection_chance = 100#Standardeinstellung: 60
+    recovery = 8 #Standardeinstellung:8
+    heavy_case = 5#Standardeinstellung: 2
+    incubation_time = 6 #Standardeinstellung: 6
+    superspreader = 10 #Standardeinstellung: 10
 
 else:
     # Game Settings
@@ -93,7 +84,7 @@ mort_rate = [[0,(0+0.2)/2],[20,0.2],[40,(0.4+1.3)/2],[60,(3.6+8)/2],[80,14.8]]
 
 # Creating People object
 class Person:
-    """A single person in the game. Has attributes of being sick, isolated, and
+    """(To DO ANPASSEN)A single person in the game. Has attributes of being sick, isolated, and
     alive. Meant to interact with another member of its population to create
     the simulation."""
     def __init__(self, isolated, sick,immune,heavy,infected,superspread):
@@ -113,7 +104,6 @@ class Person:
         if self.superspread:
             self.speed = [randint(-100, 100) * 0.05, randint(-100, 100) * 0.05]
         else:
-
             self.speed = [randint(-100, 100) * 0.025, randint(-100, 100) * 0.025]
         if sick:
             self.image = pygame.image.load("red box 2.jpg")
@@ -143,67 +133,74 @@ class Person:
                 break
 
     def new_day(self):
-        """The change from day to day for a sick person.
+        """(To DO ANPASSEN)The change from day to day for a sick person.
         They can either recover or die
         If dead then they have no more impact on the population"""
-        #if input() == i:
-        #    self.isolated = True
 
+
+        a = randint(-100,100) # generiert zwei Zufallszahlen, welche für die Wahrscheinlichkeitsrechnung benötigt werden
+        b = randint(-100,100)
+
+        #Berechnung der Geschwindigkeiten einer einzelnen Person für den nächsten Zweitschritt:
         if self.isolated:
             self.speed = [0, 0]
-        if self.superspread:
-            pass
-        elif not self.alive == 0:
-            self.speed = [randint(-100, 100) * 0.04*up, randint(-100, 100) * 0.04*up]
 
+        elif self.alive and self.superspread==0:
+            self.speed = [a * 0.04*up, b * 0.04*up]
+
+
+
+        #Entscheidung über den Status (Krankheitsverlauf) einezer einzelnen Person der Population:
         if self.infected:
-            if randint(1,100) < incubation_time:
-                self.infected = False
+            if abs(a) < incubation_time:
+                self.infected = False #PRÜFEN
                 self.sick = True
-                self.alive = True
+                #self.alive = True
 
                 self.image = pygame.image.load("red box 2.jpg")
 
         if self.sick:
-
-            if randint(1, 100) < heavy_case:
-                self.isolated = True
-                self.superspread = False
-                self.speed = [0, 0]
-                self.alive = True
-                self.heavy = True
-                self.sick = True
-                self.image = pygame.image.load("red box 2.jpg")
-            elif randint(1, 100) < recovery:
+            if abs(b) < recovery:
                 self.sick = False
                 self.immune = True
-                self.alive = True
-                self.speed = [randint(-100, 100) * 0.05, randint(-100, 100) * 0.05]
+                #self.alive = True
+                #self.speed = [a * 0.05, b * 0.05] # Person nimmt wieder am Öffentlichen Leben teil
                 self.image = pygame.image.load("green square 2.jpg")
+            if abs(a) < heavy_case and self.sick:
+                self.isolated = True #Person wird stationär aufgenommen --> Mobilität = 0
+                self.superspread = False
+                #self.speed = [0, 0]
+                #self.alive = True
+                self.heavy = True
+                #self.sick = True
+                self.image = pygame.image.load("red box 2.jpg")
+
 
         if self.heavy:
-
-            if randint(1, 100) < self.mortality:
-                self.isolated = True
-                self.superspread = False
-                self.speed = [0, 0]
+            if abs(b) < recovery:
+                self.isolated = False
+                self.sick = False
+                self.heavy = False
+                self.immune = True
+                self.alive = True
+                self.speed = [a * 0.05, b * 0.05]
+                self.image = pygame.image.load("green square 2.jpg")
+            if abs(a) < self.mortality and self.heavy:
+                #self.isolated = True
+                #self.superspread = False
+                #self.speed = [0, 0]
                 self.alive = False
                 self.heavy = False
-                self.immune = False
+                #self.immune = False
                 self.dead = True
                 self.sick = False
                 #self.immune = False
                 self.image = pygame.image.load("dark red 2.jpg")
-            elif randint(1, 100) < recovery:
-                self.sick = False
-                self.immune = True
-                self.alive = True
-                self.speed = [randint(-100, 100) * 0.05, randint(-100, 100) * 0.05]
-                self.image = pygame.image.load("green square 2.jpg")
+
 
 
     def contact(self, other):
-        """The event that two people come in contact with each other.
+        """ (To DO ANPASSEN) The event that two people come in contact with each other.
         Handles the case where the infection spreads
         Also handles the change in direction as they part ways
         Isolated people dont come into contact so people pass through them"""
@@ -239,7 +236,7 @@ class Person:
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
-                if infection_chance/2 >  randint(0,100):
+                if infection_chance/2 > randint(0,100):
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
@@ -332,7 +329,7 @@ while sim_continue(population):
             inf+=1
         if people.immune ==True:
             imm +=1
-        if people.dead == True:
+        if people.alive == False:
             dead +=1
     people_infected[day_counter]=inf/popsize
     people_immune[day_counter]=imm/popsize
@@ -341,7 +338,7 @@ while sim_continue(population):
     if count == 8:
         print(day_counter,".....",people_infected[day_counter],".....",people_immune[day_counter],".....",people_dead[day_counter],".....",100*people_infected[day_counter]/people_infected[day_counter-1]-100)
         count = 0
-    #time.sleep(0.001)
+    #time.sleep(0.9)
     #Exit Key (right arrow)
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_RIGHT:

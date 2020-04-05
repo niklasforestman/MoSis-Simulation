@@ -19,10 +19,14 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
-scale = 500 #Skalierung
-up = 1.2   #Bewegungsgeschwindigkeit der Personen
+scale = 700 #Standardeinstellung: 700 #Skalierung
+up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 
-popsize = scale
+if scale > 600:
+    popsize = scale + 600
+
+else:
+    popsize = scale
 
 
 end_dist = pd.DataFrame(columns=['Age','Alive'],index=range(popsize))
@@ -33,12 +37,12 @@ result = True
 if dev_mode == True:
 
     isolation = 0 #Standardeinstellung: 0
-    infected = 20 #Standardeinstellung: 2
-    infection_chance = 100#Standardeinstellung: 60
-    recovery = 8 #Standardeinstellung:8
-    heavy_case = 5#Standardeinstellung: 2
-    incubation_time = 6 #Standardeinstellung: 6
-    superspreader = 10 #Standardeinstellung: 10
+    infected = 4 #Standardeinstellung: 2
+    infection_chance = 40#Standardeinstellung: 60
+    recovery = 12 #Standardeinstellung:8
+    heavy_case = 10#Standardeinstellung: 2
+    incubation_time = 28 #Standardeinstellung: 20
+    superspreader = 50 #Standardeinstellung: 10
 
 else:
     # Game Settings
@@ -75,7 +79,7 @@ count = 0
 pop_dist = [[0,18.4],[20,18.4+24.6],[40,18.4+24.6+28.8],[60,18.4+24.6+28.8+21.7],[80,18.4+24.6+28.8+21.7+6.5]]
 #Altersverteilung in Deutschland nach (https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Bevoelkerungsstand/Tabellen/liste-altersgruppen.html)
 #erster Eintrag: Untergrenze Alter, zweiter Eintrag: kumulierter Anteil an Bevölkerung
-mort_rate = [[0,(0+0.2)/2],[20,0.2],[40,(0.4+1.3)/2],[60,(3.6+8)/2],[80,14.8]]
+mort_rate = [[0,(0+0.2)/2/10],[20,0.2/10],[40,(0.4+1.3)/2/10],[60,(3.6+8)/2/10],[80,14.8/10]]#
 #Sterblichkeitsrate über Alter nach (https://www.dw.com/de/coronavirus-endlich-umfassende-daten-aus-china/a-52421582)
 #Quelle: Chinese Center for Disease Control and Prevention
 #erster Eintrag: Untergrenze Alter, zweiter Eintrag: Sterblichkeitsrate angepasst an Altersverteilung
@@ -88,6 +92,7 @@ class Person:
     alive. Meant to interact with another member of its population to create
     the simulation."""
     def __init__(self, isolated, sick,immune,heavy,infected,superspread):
+        self.counter = 0
         self.alive = True
         self.immune = False
         self.isolated = isolated
@@ -96,6 +101,7 @@ class Person:
         self.heavy = heavy
         self.age = 0
         self.mortality = 0
+        self.contacted = False #Mit Virus in kontakt gekommen. Wichtig für r0-Berechnung
         self.dead =False
         self.superspread = superspread
         if self.isolated:
@@ -117,8 +123,9 @@ class Person:
         else:
             self.image = pygame.image.load("black box.jpg")
         self.ps = self.image.get_rect()
-        self.left = randint(1, scale/(10))
-        self.top = randint(1, scale/(10))
+        k=int(scale/10)
+        self.left = randint(1, k)
+        self.top = randint(1, k)
         rand_age = randint(0,100)
         for age_class in range(len(pop_dist)):
             if rand_age < pop_dist[age_class][1]:
@@ -151,32 +158,50 @@ class Person:
 
 
         #Entscheidung über den Status (Krankheitsverlauf) einezer einzelnen Person der Population:
-        if self.infected:
-            if abs(a) < incubation_time:
+        if self.infected and abs(a) < incubation_time:
                 self.infected = False #PRÜFEN
                 self.sick = True
                 #self.alive = True
-
                 self.image = pygame.image.load("red box 2.jpg")
 
-        if self.sick:
+        if self.sick or self.heavy:
             if abs(b) < recovery:
+                self.contacted = True
+                self.isolated = False
                 self.sick = False
+                self.heavy = False
                 self.immune = True
                 #self.alive = True
                 #self.speed = [a * 0.05, b * 0.05] # Person nimmt wieder am Öffentlichen Leben teil
                 self.image = pygame.image.load("green square 2.jpg")
-            if abs(a) < heavy_case and self.sick:
-                self.isolated = True #Person wird stationär aufgenommen --> Mobilität = 0
-                self.superspread = False
-                #self.speed = [0, 0]
-                #self.alive = True
-                self.heavy = True
-                #self.sick = True
-                self.image = pygame.image.load("red box 2.jpg")
+
+        if self.sick and abs(a) < heavy_case:
+            self.isolated = True #Person wird stationär aufgenommen --> Mobilität = 0
+            self.superspread = False
+            #self.speed = [0, 0]
+            #self.alive = True
+            self.heavy = True
+            #self.sick = True
+            self.image = pygame.image.load("red box 2.jpg")
+
+        if self.heavy and abs(a) < self.mortality:
+            #self.isolated = True
+            #self.superspread = False
+            #self.speed = [0, 0]
+            self.contacted = True
+            self.alive = False
+            self.heavy = False
+            self.immune = False
+            self.dead = True
+            self.sick = False
+            #self.immune = False
+            self.image = pygame.image.load("dark red 2.jpg")
+
+        if not self.alive:
+            self.immune = False
 
 
-        if self.heavy:
+        """" if self.heavy:
             if abs(b) < recovery:
                 self.isolated = False
                 self.sick = False
@@ -184,18 +209,8 @@ class Person:
                 self.immune = True
                 self.alive = True
                 self.speed = [a * 0.05, b * 0.05]
-                self.image = pygame.image.load("green square 2.jpg")
-            if abs(a) < self.mortality and self.heavy:
-                #self.isolated = True
-                #self.superspread = False
-                #self.speed = [0, 0]
-                self.alive = False
-                self.heavy = False
-                #self.immune = False
-                self.dead = True
-                self.sick = False
-                #self.immune = False
-                self.image = pygame.image.load("dark red 2.jpg")
+                self.image = pygame.image.load("green square 2.jpg")"""
+
 
 
 
@@ -204,48 +219,68 @@ class Person:
         Handles the case where the infection spreads
         Also handles the change in direction as they part ways
         Isolated people dont come into contact so people pass through them"""
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and not self.isolated and not other.isolated:
+        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and not self.isolated and not other.isolated and self.alive and other.alive:
             self.speed[0], self.speed[1] = \
                 self.speed[0] * -1, self.speed[1] * -1
             other.speed[0], other.speed[1] = \
                 other.speed[0] * -1, other.speed[1] * -1
             if self.sick and not other.sick:
                 if infection_chance > randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
                 if infection_chance >  randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance > randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance >  randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune: # and not self.isolated and not other.isolated:
+        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive: # and not self.isolated and not other.isolated:
             self.speed[0], self.speed[1] = \
                 self.speed[0] * -1, self.speed[1] * -1
             other.speed[0], other.speed[1] = \
                 other.speed[0] * -1, other.speed[1] * -1
             if self.sick and not other.sick:
                 if infection_chance/2 > randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
                 if infection_chance/2 > randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance/2 > randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance/2 >  randint(0,100):
+                    #self.contacted = True # Person zählt bei r0-Berechnung
+                    #other.contacted = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
@@ -265,6 +300,8 @@ def statistics(pop):
     alive = 0
     dead = 0
     immune = 0
+    r0 = 0
+    c = 0
 
     ppl_count = -1
     for people in pop:
@@ -278,6 +315,10 @@ def statistics(pop):
         else:
             dead += 1
             end_dist['Alive'][ppl_count] = 0
+        c+= people.counter
+
+    r0 = c/popsize
+    print(r0)
 
     return alive, dead, immune, end_dist
 
@@ -311,17 +352,23 @@ people_infected = np.zeros(1000)
 people_immune = np.zeros(1000)
 people_dead = np.zeros(1000)
 people_alive = np.zeros(1000)
+r0_current = np.zeros(1000)
+r0_current_superspreader = np.zeros(1000)
 people_infected[0] = infected/popsize
 # Creating the Simulation
 while sim_continue(population):
     count += 1
-    if count == 8:
+    if count == 12:
         day_counter += 1
 
 
     inf=0
     imm=0
     dead=0
+    d=0
+    z=0
+    d2 = 0
+    z2 = 0
     for people in population:
         if people.infected ==True:
             inf+=1
@@ -331,19 +378,47 @@ while sim_continue(population):
             imm +=1
         if people.alive == False:
             dead +=1
+        if people.contacted:
+            z +=1
+            d+= people.counter
+        '''if people.contacted and people.superspreader:
+            z2 +=1
+            d2+= people.counter'''
+
+    if z>0:
+        r0_current[day_counter] = d/z
+    else:
+        r0_current[day_counter] = 0
+
     people_infected[day_counter]=inf/popsize
     people_immune[day_counter]=imm/popsize
     people_dead[day_counter]=dead/popsize
     people_alive[day_counter]=1-dead/popsize
-    if count == 8:
-        print(day_counter,".....",people_infected[day_counter],".....",people_immune[day_counter],".....",people_dead[day_counter],".....",100*people_infected[day_counter]/people_infected[day_counter-1]-100)
+    if count == 12:
+        print("Tag: ",day_counter,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter],".....",people_infected[day_counter]/people_infected[day_counter-1])
         count = 0
     #time.sleep(0.9)
     #Exit Key (right arrow)
+
+    #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_RIGHT:
-            sys.exit()
-
+            for people in population:
+                if randint(0,100)>60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
+                    people.isolated = True
+        elif event.type == KEYDOWN and event.key == K_LEFT:
+            for people in population:
+                if not people.alive == False or not people.heavy == False:
+                    people.isolated = False
+     #Impfstoff sofort für alle Kranken verfügbar
+    for event in pygame.event.get():
+        if event.type == KEYDOWN and event.key == K_UP:
+            for people in population:
+                if people.sick or people.infected:
+                    people.sick = False
+                    people.infected = False
+                    people.immune = True
+                    self.image = pygame.image.load("green square 2.jpg")
     screen.fill(white)
     for person in population:
         person.ps = person.ps.move(person.speed)

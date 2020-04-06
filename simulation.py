@@ -361,10 +361,40 @@ people_infected[0] = infected/popsize
 # Creating the Simulation
 
 def pregame(pregameStatus):
+    # eine kurze Pause um den Spieler eine Position anklicken zu lassen
+    time.sleep(5)
+
     if pregameStatus:
+        # eine kurze Pause um den Spieler eine Position anklicken zu lassen
+        time.sleep(3)
+
+        #es wird das letzte Event angeguckt - es wird geguckt ob mit der Maus geklickt wurde
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
-                pass
+
+                for person in population:
+                    if abs(person.ps.left - event.pos[1]) < 5 and abs(person.ps.top - event.pos[2]):
+                        person.infected = True
+
+
+
+        screen.fill(white)
+        for person in population:
+            person.ps = person.ps.move(person.speed)
+            if person.ps.left < 0 or person.ps.right > width:
+                person.speed[0] = person.speed[0] * -1
+            if person.ps.top < 0 or person.ps.bottom > height:
+                person.speed[1] = person.speed[1] * -1
+            for friend in population:
+                if person is friend:
+                    pass
+                else:
+                    person.contact(friend)
+            if count == 0:
+                person.new_day()
+            screen.blit(person.image, person.ps)
+
+        pygame.display.flip()
 
 
 def hauptspiel(day_counter):
@@ -475,7 +505,7 @@ def hauptspiel(day_counter):
         pygame.display.flip()
 
 #--------------------------------------
-pregame()
+pregame(pregameStatus)
 hauptspiel(day_counter)
 #--------------------------------------
 

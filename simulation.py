@@ -25,7 +25,7 @@ dev_mode = True
 result = True
 #Szenario_1: Isolierung aller ab einer bestimmten Infektionszahl
 #Seznrio_2: Isolierung von Personen mit Symptomen
-events_enabled = 2 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
+events_enabled = 1 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 
 if scale > 600:
@@ -411,10 +411,10 @@ while sim_continue(population):
                     people.isolated = True
         elif event.type == KEYDOWN and event.key == K_LEFT:
             for people in population:
-                if not people.alive == False or not people.heavy == False:
+                if not people.heavy or people.alive:
                     people.isolated = False
                     isolation_enabled = False
-                    events_enabled = False #Stellt eigenständige Events aus
+                    #events_enabled = False #Stellt eigenständige Events aus
      #Impfstoff sofort für alle Kranken verfügbar
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_UP:
@@ -428,15 +428,15 @@ while sim_continue(population):
 
 
     if events_enabled == 1:
-        if people_infected[day_counter] > 0.05 and not isolation_enabled:
+        if people_infected[day_counter] > 0.10 and not isolation_enabled:
             for people in population:
                 if randint(0,100)<40:  #Mit einer Wahrscheinlihckeit von 40% halten sich die Personen an die Regeln
                     people.isolated = True
                 isolation_enabled = True
-        elif people_infected[day_counter] < 0.02:
+        elif people_infected[day_counter] < 0.05:
             isolation_enabled = False
             for people in population:
-                if not people.alive == False or not people.heavy == False:
+                if not people.heavy or people.alive:
                     people.isolated = False
     if events_enabled == 2:
         for people in population:

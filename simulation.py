@@ -21,6 +21,10 @@ import time
 import numpy as np
 scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
+dev_mode = True
+result = True
+events_enabled = False # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
+isolation_enabled = False #Parameter Definition für die Selbstregulierung
 
 if scale > 600:
     popsize = scale + 600
@@ -31,8 +35,7 @@ else:
 
 end_dist = pd.DataFrame(columns=['Age','Alive'],index=range(popsize))
 
-dev_mode = True
-result = True
+
 
 if dev_mode == True:
 
@@ -101,7 +104,7 @@ class Person:
         self.heavy = heavy
         self.age = 0
         self.mortality = 0
-        self.contacted = False #Mit Virus in kontakt gekommen. Wichtig für r0-Berechnung
+        self.finished = False #Mit Virus in kontakt gekommen. Wichtig für r0-Berechnung
         self.dead =False
         self.superspread = superspread
         if self.isolated:
@@ -166,7 +169,7 @@ class Person:
 
         if self.sick or self.heavy:
             if abs(b) < recovery:
-                self.contacted = True
+                self.finished = True
                 self.isolated = False
                 self.sick = False
                 self.heavy = False
@@ -188,7 +191,7 @@ class Person:
             #self.isolated = True
             #self.superspread = False
             #self.speed = [0, 0]
-            self.contacted = True
+            self.finished = True
             self.alive = False
             self.heavy = False
             self.immune = False
@@ -226,29 +229,29 @@ class Person:
                 other.speed[0] * -1, other.speed[1] * -1
             if self.sick and not other.sick:
                 if infection_chance > randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
                 if infection_chance >  randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance > randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance >  randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
         if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive: # and not self.isolated and not other.isolated:
@@ -258,29 +261,29 @@ class Person:
                 other.speed[0] * -1, other.speed[1] * -1
             if self.sick and not other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance/2 >  randint(0,100):
-                    #self.contacted = True # Person zählt bei r0-Berechnung
-                    #other.contacted = True # Person zählt bei r0-Berechnung
+                    #self.finished = True # Person zählt bei r0-Berechnung
+                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     self.image = pygame.image.load("rosa box.jpg")
 
@@ -378,10 +381,10 @@ while sim_continue(population):
             imm +=1
         if people.alive == False:
             dead +=1
-        if people.contacted:
+        if people.finished:
             z +=1
             d+= people.counter
-        '''if people.contacted and people.superspreader:
+        '''if people.finished and people.superspreader:
             z2 +=1
             d2+= people.counter'''
 
@@ -395,7 +398,7 @@ while sim_continue(population):
     people_dead[day_counter]=dead/popsize
     people_alive[day_counter]=1-dead/popsize
     if count == 12:
-        print("Tag: ",day_counter,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter],".....",people_infected[day_counter]/people_infected[day_counter-1])
+        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter],".....",people_infected[day_counter]/people_infected[day_counter-1])
         count = 0
     #time.sleep(0.9)
     #Exit Key (right arrow)
@@ -404,12 +407,14 @@ while sim_continue(population):
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_RIGHT:
             for people in population:
-                if randint(0,100)>60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
+                if randint(0,100)<60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
                     people.isolated = True
         elif event.type == KEYDOWN and event.key == K_LEFT:
             for people in population:
                 if not people.alive == False or not people.heavy == False:
                     people.isolated = False
+                    isolation_enabled = False
+                    events_enabled = False #Stellt eigenständige Events aus
      #Impfstoff sofort für alle Kranken verfügbar
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_UP:
@@ -419,6 +424,22 @@ while sim_continue(population):
                     people.infected = False
                     people.immune = True
                     self.image = pygame.image.load("green square 2.jpg")
+
+
+
+    if events_enabled:
+        if people_infected[day_counter] > 0.05 and not isolation_enabled:
+            for people in population:
+                if randint(0,100)<40:  #Mit einer Wahrscheinlihckeit von 40% halten sich die Personen an die Regeln
+                    people.isolated = True
+                isolation_enabled = True
+        elif people_infected[day_counter] < 0.02:
+            isolation_enabled = False
+            for people in population:
+                if not people.alive == False or not people.heavy == False:
+                    people.isolated = False
+
+
     screen.fill(white)
     for person in population:
         person.ps = person.ps.move(person.speed)
@@ -458,6 +479,7 @@ if result == True:
     plt.plot(people_immune, 'g-')
     plt.plot(people_dead, 'r-')
     plt.plot(people_alive, 'y-')
+    plt.plot(r0_current, 'g-')
 
     # Achsen-Bereiche manuell festlegen
     # Syntax: plt.axis([xmin, xmax, ymin, ymax])

@@ -23,15 +23,15 @@ scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 dev_mode = True
 result = True
-events_enabled = False # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
+#Szenario_1: Isolierung aller ab einer bestimmten Infektionszahl
+#Seznrio_2: Isolierung von Personen mit Symptomen
+events_enabled = 2 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 
 if scale > 600:
     popsize = scale + 600
-
 else:
     popsize = scale
-
 
 end_dist = pd.DataFrame(columns=['Age','Alive'],index=range(popsize))
 
@@ -427,7 +427,7 @@ while sim_continue(population):
 
 
 
-    if events_enabled:
+    if events_enabled == 1:
         if people_infected[day_counter] > 0.05 and not isolation_enabled:
             for people in population:
                 if randint(0,100)<40:  #Mit einer Wahrscheinlihckeit von 40% halten sich die Personen an die Regeln
@@ -438,6 +438,13 @@ while sim_continue(population):
             for people in population:
                 if not people.alive == False or not people.heavy == False:
                     people.isolated = False
+    if events_enabled == 2:
+        for people in population:
+            if people.sick:
+                people.isolated = True
+            elif people.immune:
+                people.isolated = False
+
 
 
     screen.fill(white)

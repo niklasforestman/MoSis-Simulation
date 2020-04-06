@@ -360,6 +360,8 @@ r0_current_superspreader = np.zeros(1000)
 people_infected[0] = infected/popsize
 # Creating the Simulation
 
+
+#-------------------------------------
 def pregame(pregameStatus):
     # eine kurze Pause um den Spieler eine Position anklicken zu lassen
     time.sleep(5)

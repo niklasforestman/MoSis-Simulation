@@ -93,9 +93,8 @@ mort_rate = [[0,(0+0.2)/2/10],[20,0.2/10],[40,(0.4+1.3)/2/10],[60,(3.6+8)/2/10],
 
 # Creating People object
 class Person:
-    """(To DO ANPASSEN)A single person in the game. Has attributes of being sick, isolated, and
-    alive. Meant to interact with another member of its population to create
-    the simulation."""
+    """BEschreibt eine einzelne Person in der Simulation. Die Person hat verschiedene Attribute, welche unten aufgefhrt sind. Eine Person kann über die
+    Funktion Contact mit anderen Personen interagieren"""
     def __init__(self, isolated, sick,immune,heavy,infected,superspread):
         self.counter = 0
         self.alive = True
@@ -172,13 +171,8 @@ class Person:
                     break
 
 
-    def new_day(self):
-        """(To DO ANPASSEN)The change from day to day for a sick person.
-        They can either recover or die
-        If dead then they have no more impact on the population"""
-
-
-
+    def new_step(self):
+        """Diese Funktion berechnet den nächsten Zeitschritt. Tests, Bewegung, Krankheitsentwicklung werden hier beschrieben und ausgewertet."""
 
         a = randint(-100,100) # generiert zwei Zufallszahlen, welche für die Wahrscheinlichkeitsrechnung benötigt werden
         b = randint(-100,100)
@@ -195,18 +189,14 @@ class Person:
         elif self.alive and self.superspread==0:
             self.speed = [a * 0.04*up, b * 0.04*up]
 
-
-
         #Entscheidung über den Status (Krankheitsverlauf) einezer einzelnen Person der Population:
         if self.infected and abs(a) < incubation_time:
-                self.infected = False #PRÜFEN
+                self.infected = False
                 self.sick = True
-                #self.alive = True
                 if not tests_enabled or (tests_enabled and self.tested):
                     self.image = pygame.image.load("red box 2.jpg")
 
-
-
+        #Beschreibt den Heilungsprozess
         if self.sick or self.heavy:
             if abs(b) < recovery:
                 self.finished = True
@@ -214,27 +204,17 @@ class Person:
                 self.sick = False
                 self.heavy = False
                 self.immune = True
-                #self.alive = True
-                #self.speed = [a * 0.05, b * 0.05] # Person nimmt wieder am Öffentlichen Leben teil
                 if not tests_enabled or (tests_enabled and self.tested):
                     self.image = pygame.image.load("green square 2.jpg")
-
 
         if self.sick and abs(a) < heavy_case:
             self.isolated = True #Person wird stationär aufgenommen --> Mobilität = 0
             self.superspread = False
-            #self.speed = [0, 0]
-            #self.alive = True
             self.heavy = True
-            #self.sick = True
             if not tests_enabled or (tests_enabled and self.tested):
                     self.image = pygame.image.load("red box 2.jpg")
 
-
         if self.heavy and abs(a) < self.mortality:
-            #self.isolated = True
-            #self.superspread = False
-            #self.speed = [0, 0]
             self.finished = True
             self.alive = False
             self.heavy = False
@@ -248,117 +228,82 @@ class Person:
             self.immune = False
 
 
-        """" if self.heavy:
-            if abs(b) < recovery:
-                self.isolated = False
-                self.sick = False
-                self.heavy = False
-                self.immune = True
-                self.alive = True
-                self.speed = [a * 0.05, b * 0.05]
-                self.image = pygame.image.load("green square 2.jpg")"""
-
-
-
 
     def contact(self, other):
-        """ (To DO ANPASSEN) The event that two people come in contact with each other.
-        Handles the case where the infection spreads
-        Also handles the change in direction as they part ways
-        Isolated people dont come into contact so people pass through them"""
+        """ Dies ist eine Funktion, welche den Kontakt zweier Personen beschreibt und die Ansteckungsgefahr simuliert"""
         if self.ps.colliderect(other.ps) and not self.immune and not other.immune and not self.isolated and not other.isolated and self.alive and other.alive:
-            self.speed[0], self.speed[1] = \
-                self.speed[0] * -1, self.speed[1] * -1
-            other.speed[0], other.speed[1] = \
-                other.speed[0] * -1, other.speed[1] * -1
+            
+            self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
+            other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
+            
             if self.sick and not other.sick:
-                if infection_chance > randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
-                    self.counter +=1
-                    other.infected = True
-                    if not tests_enabled or (tests_enabled and self.tested):
+                if infection_chance > randint(0,100): 
+                    self.counter +=1 # Zählt die angesteckten Personen durch die Person selbst.
+                    other.infected = True 
+                    if not tests_enabled or (tests_enabled and self.tested): #Personen, welche durch Infizierte angesteckt werden, werden wie bereits geteste behandelt
                         other.image = pygame.image.load("rosa box.jpg")
-
-
+                        
             elif not self.sick and other.sick:
                 if infection_chance >  randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     if not tests_enabled or (tests_enabled and other.tested):
                         self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance > randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     if not tests_enabled or (tests_enabled and self.tested):
                         other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance >  randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     if not tests_enabled or (tests_enabled and other.tested):
                         self.image = pygame.image.load("rosa box.jpg")
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive: # and not self.isolated and not other.isolated:
-            self.speed[0], self.speed[1] = \
-                self.speed[0] * -1, self.speed[1] * -1
-            other.speed[0], other.speed[1] = \
-                other.speed[0] * -1, other.speed[1] * -1
+                        
+                        
+        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive:
+            
+            self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
+            other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
+            
             if self.sick and not other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     if not tests_enabled or (tests_enabled and self.tested):
                         other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     if not tests_enabled or (tests_enabled and other.tested):
                         self.image = pygame.image.load("rosa box.jpg")
 
             if self.infected and not other.sick:
                 if infection_chance/2 > randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.counter +=1
                     other.infected = True
                     if not tests_enabled or (tests_enabled and self.tested):
                         other.image = pygame.image.load("rosa box.jpg")
             elif not self.sick and other.infected:
                 if infection_chance/2 >  randint(0,100):
-                    #self.finished = True # Person zählt bei r0-Berechnung
-                    #other.finished = True # Person zählt bei r0-Berechnung
                     self.infected = True
                     if not tests_enabled or (tests_enabled and other.tested):
                         self.image = pygame.image.load("rosa box.jpg")
 
 
 def sim_continue(pop):
-    """Tells the simulation if there is any point in continuing.
-    End of simulation defined as the event when the whole population is either
-    dead or completely recovered."""
+    """Diese Funktion beschreibt die Endbedingung für das Programm"""
     all_dead = all(not people.alive for people in pop)
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
 
 
 def statistics(pop):
-    """Informs the user of population statistics following the extermination of
-    either the population or the virus"""
+    """Stellt eine Statistik zusammen, welche am Ende des Programms durchgeführt wird."""
     alive = 0
     dead = 0
     immune = 0
-    r0 = 0
-    c = 0
 
     ppl_count = -1
     for people in pop:
@@ -372,10 +317,6 @@ def statistics(pop):
         else:
             dead += 1
             end_dist['Alive'][ppl_count] = 0
-        c+= people.counter
-
-    r0 = c/popsize
-    print(r0)
 
     return alive, dead, immune, end_dist
 
@@ -385,7 +326,7 @@ def statistics(pop):
 screen = pygame.display.set_mode(size)
 population = []
 
-# Creating the population
+# Aufbauen der Population
 for i in range(popsize):
     is_isolated = False
     is_infected = False
@@ -393,16 +334,19 @@ for i in range(popsize):
     is_heavy = False
     is_superspread = False
     temp = randint(1, popsize)
-    if temp < isolation:
-        is_isolated = True
+    if temp < isolation: 
+        is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
     if temp < infected:
-        is_infected = True
+        is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
     if temp < superspreader:
-        is_superspread = True
-    new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread)
+        is_superspread = True  # Mit einer gewählten Wahrscheinlichkeit ist die Person superspreader.
+    new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread) #Erstellen eines Objekts Person mit den oben genannten Eigenschaften
     end_dist['Age'][i] = new_person.age
-    new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10)
+    new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10) # Setzen der Personen auf das Spielfeld
     population.append(new_person)
+
+
+#Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
 days = np.ones(100)
 days[0] = 0
 people_infected = np.zeros(1000)
@@ -419,7 +363,7 @@ while sim_continue(population):
     if count == 12:
         day_counter += 1
 
-
+    #Hilfsvariablen für die Berechnung
     inf=0
     inf_2 = 0
     imm=0
@@ -429,6 +373,8 @@ while sim_continue(population):
     d2 = 0
     z2 = 0
     tested = 0
+
+    #Durchzählen der Population auf bestimmte Eigenschaften
     for people in population:
         if people.infected ==True:
             inf+=1
@@ -445,9 +391,6 @@ while sim_continue(population):
             d+= people.counter
         if people.tested:
             tested +=1
-        '''if people.finished and people.superspreader:
-            z2 +=1
-            d2+= people.counter'''
 
     if fin>0:
         r0_current[day_counter] = d/fin
@@ -464,10 +407,8 @@ while sim_continue(population):
     people_alive[day_counter]=1-dead/popsize
 
     if count == 12:
-        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter],".....",people_infected[day_counter]/people_infected[day_counter-1])
+        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
         count = 0
-    #time.sleep(0.9)
-    #Exit Key (right arrow)
 
     #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
     for event in pygame.event.get():
@@ -511,8 +452,6 @@ while sim_continue(population):
             elif people.immune:
                 people.isolated = False
 
-
-
     screen.fill(white)
     for person in population:
         person.ps = person.ps.move(person.speed)
@@ -526,7 +465,7 @@ while sim_continue(population):
             else:
                 person.contact(friend)
         if count == 0:
-            person.new_day()
+            person.new_step()
         screen.blit(person.image, person.ps)
 
     pygame.display.flip()
@@ -563,15 +502,3 @@ if result == True:
 
     # Diagramm anzeigen:
     plt.show()
-
-
-    """plt.figure(figsize=(12,6))
-    plt.style.use('seaborn-darkgrid')
-    end_dist['Age'].value_counts().sort_index().plot(c='purple',marker='o',label='Population',markersize=10)
-    end_dist[end_dist['Alive']==1]['Age'].value_counts().sort_index().plot(c='blue',marker='o',label='Alive')
-    end_dist[end_dist['Alive']==0]['Age'].value_counts().sort_index().plot(c='red',marker='o',label='Deceased')
-    plt.legend()
-    plt.xlabel('Age')
-    plt.ylabel('Count')
-    plt.title('Result')
-    plt.show()"""

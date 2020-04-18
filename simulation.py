@@ -8,6 +8,13 @@ Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
 
 """
 
+# Colorcode:
+# - Schwarz: Nicht erkrankt, nicht infiziert
+# - Grün: Immun
+# - Rosa: Infiziert
+# - Rot: Krank
+# - Dunkelrot: Verstorben
+
 #   === INIT ===
 
 import sys
@@ -19,6 +26,11 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
+import bisect
+import plotly as py
+import plotly.graph_objs as go
+from plotly.offline import iplot
+
 scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 dev_mode = True
@@ -28,6 +40,8 @@ result = True
 events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 tests_enabled = False
+area_grid = 2 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
+cross_prob = 10 # Wahrscheinlichkeit eine Grenze bei Erreichen zu Überqueren in Prozent
 
 if scale > 600:
     popsize = scale + 600
@@ -88,6 +102,11 @@ mort_rate = [[0,(0+0.2)/2/10],[20,0.2/10],[40,(0.4+1.3)/2/10],[60,(3.6+8)/2/10],
 #Sterblichkeitsrate über Alter nach (https://www.dw.com/de/coronavirus-endlich-umfassende-daten-aus-china/a-52421582)
 #Quelle: Chinese Center for Disease Control and Prevention
 #erster Eintrag: Untergrenze Alter, zweiter Eintrag: Sterblichkeitsrate angepasst an Altersverteilung
+
+if area_grid > 1: #Grenzen erstellen
+    grids = []
+    for counter_grid in range(1, area_grid):
+        grids.append(counter_grid * width / area_grid)
 
 # === DEF ===
 
@@ -182,7 +201,7 @@ class Person:
             if abs(a) < testrate and (self.infected or self.sick):
                 self.tested = True
 
-        #Berechnung der Geschwindigkeiten einer einzelnen Person für den nächsten Zweitschritt:
+        #Berechnung der Geschwindigkeiten einer einzelnen Person für den nächsten Zeitschritt:
         if self.isolated:
             self.speed = [0, 0]
 
@@ -232,17 +251,17 @@ class Person:
     def contact(self, other):
         """ Dies ist eine Funktion, welche den Kontakt zweier Personen beschreibt und die Ansteckungsgefahr simuliert"""
         if self.ps.colliderect(other.ps) and not self.immune and not other.immune and not self.isolated and not other.isolated and self.alive and other.alive:
-            
+
             self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
             other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
-            
+
             if self.sick and not other.sick:
-                if infection_chance > randint(0,100): 
+                if infection_chance > randint(0,100):
                     self.counter +=1 # Zählt die angesteckten Personen durch die Person selbst.
-                    other.infected = True 
+                    other.infected = True
                     if not tests_enabled or (tests_enabled and self.tested): #Personen, welche durch Infizierte angesteckt werden, werden wie bereits geteste behandelt
                         other.image = pygame.image.load("rosa box.jpg")
-                        
+
             elif not self.sick and other.sick:
                 if infection_chance >  randint(0,100):
                     self.infected = True
@@ -260,13 +279,13 @@ class Person:
                     self.infected = True
                     if not tests_enabled or (tests_enabled and other.tested):
                         self.image = pygame.image.load("rosa box.jpg")
-                        
-                        
+
+
         if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive:
-            
+
             self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
             other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
-            
+
             if self.sick and not other.sick:
                 if infection_chance/2 > randint(0,100):
                     self.counter +=1
@@ -334,7 +353,7 @@ for i in range(popsize):
     is_heavy = False
     is_superspread = False
     temp = randint(1, popsize)
-    if temp < isolation: 
+    if temp < isolation:
         is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
     if temp < infected:
         is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
@@ -407,7 +426,10 @@ while sim_continue(population):
     people_alive[day_counter]=1-dead/popsize
 
     if count == 12:
-        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
+        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ", \
+              round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
+              ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
+              round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
         count = 0
 
     #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
@@ -454,6 +476,38 @@ while sim_continue(population):
 
     screen.fill(white)
     for person in population:
+        if 'grids' in globals(): # Grenzen existieren
+            #Grenzen zeichnen
+            for i in range(len(grids)):
+                pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+
+            # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
+
+            # Koordinate 1
+            if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
+                # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                if randint(0,100) > cross_prob:
+                    person.speed[0] = person.speed[0] * -1
+            elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
+                # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                if randint(0,100) > cross_prob:
+                    person.speed[0] = 0
+
+            # Koordinate 2
+            if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
+                # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                if randint(0,100) > cross_prob:
+                    person.speed[1] = person.speed[1] * -1
+            elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
+                # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                if randint(0,100) > cross_prob:
+                    person.speed[1] = 0
+
         person.ps = person.ps.move(person.speed)
         if person.ps.left < 0 or person.ps.right > width:
             person.speed[0] = person.speed[0] * -1
@@ -484,6 +538,66 @@ print("Immune: ",immune)
 if result == True:
     # === AUSWERTUNG ===
 
+    alive_end = go.Scatter(
+        x=np.arange(np.where(people_alive == 0)[0][0]),
+        y=people_alive[:np.where(people_alive == 0)[0][0]],
+        name='Alive'
+    )
+    immune_end = go.Scatter(
+        x=np.arange(np.where(people_alive == 0)[0][0]),
+        y=people_immune[:np.where(people_alive == 0)[0][0]],
+        name='Immune'
+    )
+    infected_end = go.Scatter(
+        x=np.arange(np.where(people_alive == 0)[0][0]),
+        y=people_infected[:np.where(people_alive == 0)[0][0]],
+        name='Infected'
+    )
+    deceased_end = go.Scatter(
+        x=np.arange(np.where(people_alive == 0)[0][0]),
+        y=people_dead[:np.where(people_alive == 0)[0][0]],
+        name='Deceased'
+    )
+    data = [alive_end, immune_end, infected_end, deceased_end]
+
+    layout = go.Layout(
+        title=go.layout.Title(
+            text='Result'
+        ),
+        xaxis=go.layout.XAxis(
+            title=go.layout.xaxis.Title(
+                text='Days'
+
+            )
+        ),
+        yaxis=go.layout.YAxis(
+            title=go.layout.yaxis.Title(
+                text='Part of Population'
+
+            )
+        )
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+    iplot(fig)
+
+    '''
+    df_result = pd.DataFrame(columns=['Alive','Immune','Infected','Deceased'])
+    df_result['Alive'] = people_alive[people_alive!=0]
+    df_result['Immune'] = people_immune[people_alive!=0]
+    df_result['Infected'] = people_infected[people_alive!=0]
+    df_result['Deceased'] = people_dead[people_alive!=0]
+
+    #df_result.plot()
+    #plt.show()
+
+    #cf.go_offline()
+    fig = df_result.iplot()
+    py.offline.plot(fig)
+
+
+    test_var = 0
+    
     plt.ylabel('Aktuell Infizierte')
 
     # Einen x-y-Plot erstellen:
@@ -491,7 +605,6 @@ if result == True:
     plt.plot(people_immune, 'g-')
     plt.plot(people_dead, 'r-')
     plt.plot(people_alive, 'y-')
-    plt.plot(r0_current, 'g-')
 
     # Achsen-Bereiche manuell festlegen
     # Syntax: plt.axis([xmin, xmax, ymin, ymax])
@@ -502,3 +615,17 @@ if result == True:
 
     # Diagramm anzeigen:
     plt.show()
+    '''
+
+"""
+    plt.figure(figsize=(12,6))
+    plt.style.use('seaborn-darkgrid')
+    end_dist['Age'].value_counts().sort_index().plot(c='purple',marker='o',label='Population',markersize=10)
+    end_dist[end_dist['Alive']==1]['Age'].value_counts().sort_index().plot(c='blue',marker='o',label='Alive')
+    end_dist[end_dist['Alive']==0]['Age'].value_counts().sort_index().plot(c='red',marker='o',label='Deceased')
+    plt.legend()
+    plt.xlabel('Age')
+    plt.ylabel('Count')
+    plt.title('Result')
+    plt.show()
+    """

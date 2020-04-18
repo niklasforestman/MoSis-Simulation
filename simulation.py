@@ -8,6 +8,8 @@ Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
 
 """
 
+#BETA - EXcel-Auswertung
+
 #   === INIT ===
 
 import sys

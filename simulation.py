@@ -120,9 +120,9 @@ class Person:
 
         if not tests_enabled:
             if self.superspread:
-                self.speed = [randint(-100, 100) * 0.05, randint(-100, 100) * 0.05]
+                self.speed = [up*randint(-100, 100) * 0.05,up*randint(-100, 100) * 0.05]
             else:
-                self.speed = [randint(-100, 100) * 0.025, randint(-100, 100) * 0.025]
+                self.speed = [up*randint(-100, 100) * 0.025,up*randint(-100, 100) * 0.025]
             if sick:
                 self.image = pygame.image.load("red box 2.jpg")
             if immune:
@@ -151,9 +151,9 @@ class Person:
                     break
         elif tests_enabled:
             if self.superspread:
-                self.speed = [randint(-100, 100) * 0.05, randint(-100, 100) * 0.05]
+                self.speed = [up*randint(-100, 100) * 0.05,up*randint(-100, 100) * 0.05]
             else:
-                self.speed = [randint(-100, 100) * 0.025, randint(-100, 100) * 0.025]
+                self.speed = [up*randint(-100, 100) * 0.025,up*randint(-100, 100) * 0.025]
             self.image = pygame.image.load("black box.jpg")
             self.ps = self.image.get_rect()
             k=int(scale/10)
@@ -322,6 +322,45 @@ def statistics(pop):
 
     return alive, dead, immune, end_dist
 
+def Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead):
+
+    workbook = xlsxwriter.Workbook('Daten_Vergleich.xlsx')
+    worksheet = workbook.add_worksheet()
+    row = 1
+    col = 0
+
+    worksheet.write(0,col,'Tag')
+    worksheet.write(0,col+1,'r0')
+    worksheet.write(0,col+2,'Aktuell Infizierte')
+    worksheet.write(0,col+3,'Dunkelziffer')
+    worksheet.write(0,col+4,'Aktuell Immune')
+    worksheet.write(0,col+5,'Aktuell Verstorbene')
+
+
+
+    for r0 in (r0_current):#Variance, Kurtosis, Skewness, Peak
+        worksheet.write(row, col+1, r0)
+        row+=1
+    row=1
+
+    for Aktuell_Infizierte in (people_infected):#Variance, Kurtosis, Skewness, Peak
+        worksheet.write(row, col+2, Aktuell_Infizierte)
+        row +=1
+    row=1
+    for Dunkelziffer in (darkfigure):#Variance, Kurtosis, Skewness, Peak
+        worksheet.write(row, col+3, Dunkelziffer)
+        row +=1
+    row=1
+    for Aktuell_Immune in (people_immune):#Variance, Kurtosis, Skewness, Peak
+        worksheet.write(row, col+4, Aktuell_Immune)
+        row +=1
+    row=1
+    for Aktuell_Verstorbene in (people_dead):#Variance, Kurtosis, Skewness, Peak
+        worksheet.write(row, col+5, Aktuell_Verstorbene)
+        row +=1
+    row=1
+    workbook.close()
+
 
 # === PROGRAM ===
 
@@ -485,6 +524,10 @@ print("Immune: ",immune)
 
 if result == True:
     # === AUSWERTUNG ===
+    Auswertung_Excel = True
+    if Auswertung_Excel:
+        import xlsxwriter
+        Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
     plt.ylabel('Aktuell Infizierte')
 
@@ -504,3 +547,10 @@ if result == True:
 
     # Diagramm anzeigen:
     plt.show()
+
+
+
+
+
+
+

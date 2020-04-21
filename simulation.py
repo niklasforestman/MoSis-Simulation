@@ -360,9 +360,6 @@ people_infected[0] = infected/popsize
 # Creating the Simulation
 while sim_continue(population):
 
-    # check if our breakeflag is set.
-    #   if breakeFlag is set  activate the godMode
-
     count += 1
     if count == 12:
         day_counter += 1
@@ -416,6 +413,9 @@ while sim_continue(population):
 
     #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
     for event in pygame.event.get():
+
+        # here we could place the function 'clickPauseEvent' to activate th godMode... !?
+
         if event.type == KEYDOWN and event.key == K_RIGHT:
             for people in population:
                 if randint(0,100)<60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln

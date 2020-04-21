@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f33ccdd-8f90-42a2-bdb4-23fa4e2c17c1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ClickInteraktion.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClickInteraktion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +32,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1587488170771</updated>
-      <workItem from="1587488172325" duration="1525000" />
+      <workItem from="1587488172325" duration="1881000" />
     </task>
     <task id="LOCAL-00001" summary="trying to fix bugs">
       <created>1587488268823</created>
@@ -56,7 +55,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587489308888</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="more sweet sweet Pseudocode for some structural Ideas">
+      <created>1587489963124</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1587489963124</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -78,13 +84,14 @@
     <option name="LIMIT_HISTORY" value="false" />
     <MESSAGE value="trying to ensure bug is fixed" />
     <MESSAGE value="Pseudocode for some structure Ideas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pseudocode for some structure Ideas" />
+    <MESSAGE value="more sweet sweet Pseudocode for some structural Ideas" />
+    <option name="LAST_COMMIT_MESSAGE" value="more sweet sweet Pseudocode for some structural Ideas" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587489308631">
+    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587489962921">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587489308631" />
+    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587489962921" />
     <state x="223" y="69" key="MergeDialog" timestamp="1587488377443">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -97,10 +104,10 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="149" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1587488581617" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587489324545">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587489967516">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587489324545" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587489967516" />
     <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587488390978">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

@@ -415,6 +415,7 @@ while sim_continue(population):
     for event in pygame.event.get():
 
         # here we could place the function 'clickPauseEvent' to activate th godMode... !?
+        clickPauseEvent()
 
         if event.type == KEYDOWN and event.key == K_RIGHT:
             for people in population:

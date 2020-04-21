@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f33ccdd-8f90-42a2-bdb4-23fa4e2c17c1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ClickInteraktion.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClickInteraktion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +32,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1587488170771</updated>
-      <workItem from="1587488172325" duration="2190000" />
+      <workItem from="1587488172325" duration="2542000" />
     </task>
     <task id="LOCAL-00001" summary="trying to fix bugs">
       <created>1587488268823</created>
@@ -69,7 +69,21 @@
       <option name="project" value="LOCAL" />
       <updated>1587490074472</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="rudemenatry first check for the 'p' button pushed">
+      <created>1587490492711</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1587490492711</updated>
+    </task>
+    <task id="LOCAL-00007" summary="rudemenatry first check for the 'p' button pushed - update 1">
+      <created>1587490566648</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1587490566648</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,13 +107,15 @@
     <MESSAGE value="Pseudocode for some structure Ideas" />
     <MESSAGE value="more sweet sweet Pseudocode for some structural Ideas" />
     <MESSAGE value="corrections to our sweet sweet Pseudocode for some structural Ideas" />
-    <option name="LAST_COMMIT_MESSAGE" value="corrections to our sweet sweet Pseudocode for some structural Ideas" />
+    <MESSAGE value="rudemenatry first check for the 'p' button pushed" />
+    <MESSAGE value="rudemenatry first check for the 'p' button pushed - update 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="rudemenatry first check for the 'p' button pushed - update 1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587490074181">
+    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587490566504">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587490074181" />
+    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587490566504" />
     <state x="223" y="69" key="MergeDialog" timestamp="1587488377443">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -112,14 +128,14 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="149" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1587488581617" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587490079338">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587490682115">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587490079338" />
-    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587488390978">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587490682115" />
+    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587490726215">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587488390978" />
+    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587490726215" />
     <state x="304" y="195" key="git4idea.merge.GitPullDialog" timestamp="1587489318942">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

@@ -359,6 +359,10 @@ r0_current_superspreader = np.zeros(1000)
 people_infected[0] = infected/popsize
 # Creating the Simulation
 while sim_continue(population):
+
+    # check if our breakeflag is set.
+    #   if breakeFlag is set  activate the godMode
+
     count += 1
     if count == 12:
         day_counter += 1

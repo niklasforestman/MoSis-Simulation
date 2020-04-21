@@ -7,11 +7,10 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
-
+from simulation import *
 def clickPauseEvent():
     # is activated via the 'P' for PAUSE key
     #    later versions might include a nice big shiny button insode the GUI
-
     if pygame.event.type == KEYDOWN and pygame.event.key == K_p:
         godMode()
     print("Hey I see you wanne be a God. Cool stuff bro. Go ahead.")
@@ -21,7 +20,6 @@ def clickPauseEvent():
 def godMode():
     #stop the game to run some crazy stuff only a god could possibly do
     #here has to be a while loop with all ralevant steps inside th godMode
-
     while True:
         #do the relevant stuff
 
@@ -29,3 +27,9 @@ def godMode():
 
         if #resume playing is activated
             break
+
+def wululululu():
+    for people in population:
+        for i in range(0, 3):
+            pass
+    pass

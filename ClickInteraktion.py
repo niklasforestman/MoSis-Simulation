@@ -10,7 +10,10 @@ import numpy as np
 
 def clickPauseEvent():
     # is activated via the 'P' for PAUSE key
-    #    later versions might incluge a nice big shiny button insode the GUI
+    #    later versions might include a nice big shiny button insode the GUI
+
+    if pygame.event.type == KEYDOWN and pygame.event.key == K_p:
+
     print("Hey I see you wanne be a God. Cool stuff bro. Go ahead.")
     pass
 

@@ -34,14 +34,8 @@ def godMode():
                 statusGodmode = False
                 print("You have no power here!")
                 print("GodMode removed")
-
-    #while True:
-        #do the relevant stuff
-
-        #
-
-       # if #resume playing is activated
-           # break
+            if event.type == MOUSEBUTTONDOWN :
+                print(event.pos) #Gibt die Position relaitv zur oberen linken Ecke des Fensters aus
 
 def wululululu(x, y):
     for people in population:

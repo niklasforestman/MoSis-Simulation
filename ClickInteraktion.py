@@ -13,13 +13,10 @@ def clickPauseEvent():
     #    later versions might include a nice big shiny button insode the GUI
 
     if pygame.event.type == KEYDOWN and pygame.event.key == K_p:
-
+        godMode()
     print("Hey I see you wanne be a God. Cool stuff bro. Go ahead.")
     pass
 
-def checkForClickedPerson():
-    #
-    pass
 
 def godMode():
     #stop the game to run some crazy stuff only a god could possibly do

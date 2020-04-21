@@ -40,7 +40,11 @@ def godMode(population):
 def wululululu(pos, population):
     print("X = ", pos[0])
     print("y = ", pos[1])
+    aoe = 2
     durchzählen = 1
     for person in population:
-        print(durchzählen)
         durchzählen += 1
+        if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
+            print(durchzählen)
+            print("Du sollst vom Blitz getroffen werden")
+            print(person.ps)

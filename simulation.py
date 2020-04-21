@@ -29,6 +29,10 @@ events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalbe
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 tests_enabled = False
 
+event_isolation_population = 60  # Isolierte Bevölkerung nach Isolationsaufruf; Wert zwischen 0 und 100
+event_isolation_active = False  #Status des Isolationsaufrufes
+
+
 if scale > 600:
     popsize = scale + 600
 else:
@@ -76,6 +80,7 @@ else:
 
 pygame.init()
 pygame.display.set_caption("Coronavirus Infection Simulation")
+font = pygame.font.Font('freesansbold.ttf', 20)
 size = width, height = scale, scale
 speed = [25, 0]
 white = 255, 255, 255
@@ -321,12 +326,41 @@ def statistics(pop):
     return alive, dead, immune, end_dist
 
 
+class Button:
+    def __init__(self, rect, visible):
+        self.rect = pygame.Rect(rect)
+        self.image = pygame.Surface(self.rect.size).convert()
+        if visible:
+            self.image.fill((0, 0, 255))
+        else:
+            self.image.fill((255, 255, 255))
+
+    def get_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.rect.collidepoint(event.pos):
+            return True
+        else:
+            return False
+
+
+    def draw(self, surf):
+        surf.blit(self.image, self.rect)
+
+
+
+
+
+
 # === PROGRAM ===
 
+#Aufbau GUI
 screen = pygame.display.set_mode(size)
-population = []
+btn_isolation_up = Button(rect=(width*0.95, height* 0.95, width*0.04, height*0.04),  visible= True)
+btn_isolation_down = Button(rect=(width*0.85,height*0.95,width*0.04,height*0.04),  visible= True)
+btn_isolation_activate = Button(rect=(width*0.9,height*0.95,width*0.04,height*0.04),visible= False)
+
 
 # Aufbauen der Population
+population = []
 for i in range(popsize):
     is_isolated = False
     is_infected = False
@@ -357,6 +391,8 @@ people_alive = np.zeros(1000)
 r0_current = np.zeros(1000)
 r0_current_superspreader = np.zeros(1000)
 people_infected[0] = infected/popsize
+
+
 # Creating the Simulation
 while sim_continue(population):
     count += 1
@@ -407,21 +443,49 @@ while sim_continue(population):
     people_alive[day_counter]=1-dead/popsize
 
     if count == 12:
-        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
+        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled, "  ",event_isolation_population,"%.....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
         count = 0
 
     #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
+
+
     for event in pygame.event.get():
-        if event.type == KEYDOWN and event.key == K_RIGHT:
-            for people in population:
-                if randint(0,100)<60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
-                    people.isolated = True
-        elif event.type == KEYDOWN and event.key == K_LEFT:
-            for people in population:
-                if not people.heavy or people.alive:
-                    people.isolated = False
-                    isolation_enabled = False
-                    #events_enabled = False #Stellt eigenständige Events aus
+        if (event.type == KEYDOWN and event.key == K_RIGHT) or (btn_isolation_up.get_event(event) == True):
+            event_isolation_population = event_isolation_population + 5
+
+            if event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) <event_isolation_population):
+                            people.isolated = True
+
+
+        if(event.type == KEYDOWN and event.key == K_Left) or (btn_isolation_down.get_event(event) == True):
+            event_isolation_population = event_isolation_population - 5
+
+            if event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) <event_isolation_population):
+                            people.isolated = True
+
+        if btn_isolation_activate.get_event(event) == True:
+
+            if event_isolation_active == False:
+                event_isolation_active = True
+                isolation_enabled = True
+                for people in population:
+                    if (randint(0, 100) < event_isolation_population) and people.alive:
+                        people.isolated = True
+            elif event_isolation_active == True:    #Isolation aufgehoben für nicht-schwer Erkrankte
+                event_isolation_active = False
+                isolation_enabled = False
+                for people in population:
+                    if not people.heavy and people.alive:
+                               people.isolated = False
+
      #Impfstoff sofort für alle Kranken verfügbar
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_UP:
@@ -467,6 +531,18 @@ while sim_continue(population):
         if count == 0:
             person.new_step()
         screen.blit(person.image, person.ps)
+
+    btn_isolation_up.draw(screen)
+    btn_isolation_down.draw(screen)
+    btn_isolation_activate.draw(screen)
+
+    if event_isolation_active:  #Farbänderung Ausgabe Isolationsaufruf
+        text = font.render(str(event_isolation_population), True, (0, 0, 0), (0, 255, 0))
+    else:
+        text = font.render(str(event_isolation_population), True, (0, 0, 0), (255, 255, 255))
+    textRect = text.get_rect()
+    textRect.center = (width * 0.92, height * 0.97)
+    screen.blit(text, textRect)
 
     pygame.display.flip()
 

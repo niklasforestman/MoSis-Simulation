@@ -27,10 +27,13 @@ def godMode():
     print("++++++++++++++++++++++++++++++")
     print("I AM GOD!")
     print("++++++++++++++++++++++++++++++")
-    while True:
-        time.sleep(5)
-        print("you are no God here")
-        break
+    statusGodmode = True
+    while statusGodmode:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN and event.key == K_z:
+                statusGodmode = False
+                print("You have no power here!")
+                print("GodMode removed")
 
     #while True:
         #do the relevant stuff

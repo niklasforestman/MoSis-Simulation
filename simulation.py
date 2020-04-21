@@ -19,6 +19,9 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
+
+from ClickInteraktion import clickPauseEvent, godMode
+
 scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 dev_mode = True

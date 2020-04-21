@@ -11,3 +11,6 @@ import numpy as np
 def clickInteraction():
     print("Es gab ein Event")
     pass
+
+
+print("TEST TEST TTTT TESTTEXT")

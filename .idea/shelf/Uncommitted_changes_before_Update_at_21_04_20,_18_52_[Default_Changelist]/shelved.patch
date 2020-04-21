@@ -1,0 +1,13 @@
+Index: ClickInteraktion.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from pygame import mouse
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ClickInteraktion.py	(revision 44e06503e20d8625abfa0331337d25d164a83e60)
++++ ClickInteraktion.py	(date 1587487909345)
+@@ -1,1 +1,1 @@
+-from pygame import mouse
+\ No newline at end of file
++from pygame import mouse

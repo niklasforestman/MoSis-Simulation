@@ -36,9 +36,7 @@ def godMode():
                 print("GodMode removed")
             if event.type == MOUSEBUTTONDOWN :
                 print(event.pos) #Gibt die Position relaitv zur oberen linken Ecke des Fensters aus
-
-def wululululu(x, y):
-    for people in population:
-        if True:
-            pass
-    pass
+                wululululu(event.pos)
+def wululululu(pos):
+    print("X = ", pos[0])
+    print("y = ", pos[1])

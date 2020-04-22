@@ -44,7 +44,7 @@ end_dist = pd.DataFrame(columns=['Age','Alive'],index=range(popsize))
 if dev_mode == True:
 
     isolation = 0 #Standardeinstellung: 0
-    infected = 2 #Standardeinstellung: 2
+    infected = 20 #Standardeinstellung: 2
     infection_chance = 40#Standardeinstellung: 60
     recovery = 12 #Standardeinstellung:8
     heavy_case = 10#Standardeinstellung: 2

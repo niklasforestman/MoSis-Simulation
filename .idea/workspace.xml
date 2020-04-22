@@ -2,11 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f33ccdd-8f90-42a2-bdb4-23fa4e2c17c1" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_04_20,_18_10_[Default_Changelist]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_04_20__18_10__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/MoSis-Simulation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MoSis-Simulation.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_04_20,_18_10_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_04_20__18_10__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClickInteraktion.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClickInteraktion.py" afterDir="false" />
+>>>>>>> Jan&Tim_Interaktion
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,20 +30,11 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="simulation" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -50,6 +49,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulation.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -70,12 +70,15 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0ca41979-252e-4b2c-99a1-48b611adb282" name="Default Changelist" comment="" />
+      <changelist id="5f33ccdd-8f90-42a2-bdb4-23fa4e2c17c1" name="Default Changelist" comment="" />
       <created>1587488170771</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1587488170771</updated>
-      <workItem from="1587488172325" duration="2542000" />
+      <workItem from="1587488172325" duration="5976000" />
+      <workItem from="1587536837076" duration="1081000" />
+      <workItem from="1587572300413" duration="172000" />
+      <workItem from="1587572604212" duration="492000" />
     </task>
     <task id="LOCAL-00001" summary="trying to fix bugs">
       <created>1587488268823</created>
@@ -126,7 +129,28 @@
       <option name="project" value="LOCAL" />
       <updated>1587490566648</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="rudemenatry first check for the 'p' button pushed - update 2">
+      <created>1587490757178</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1587490757178</updated>
+    </task>
+    <task id="LOCAL-00009" summary="minor alterations">
+      <created>1587571447394</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1587571447394</updated>
+    </task>
+    <task id="LOCAL-00010" summary="minor alterations in comments ond console prints">
+      <created>1587571725563</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1587571725563</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,13 +161,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LIMIT_HISTORY" value="false" />
@@ -153,33 +176,60 @@
     <MESSAGE value="corrections to our sweet sweet Pseudocode for some structural Ideas" />
     <MESSAGE value="rudemenatry first check for the 'p' button pushed" />
     <MESSAGE value="rudemenatry first check for the 'p' button pushed - update 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="rudemenatry first check for the 'p' button pushed - update 1" />
+    <MESSAGE value="rudemenatry first check for the 'p' button pushed - update 2" />
+    <MESSAGE value="minor alterations" />
+    <MESSAGE value="minor alterations in comments ond console prints" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor alterations in comments ond console prints" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587490566504">
+    <state x="140" y="0" key="CommitChangelistDialog2" timestamp="1587571725368">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587490566504" />
-    <state x="223" y="69" key="MergeDialog" timestamp="1587488377443">
+    <state x="140" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587490756947" />
+    <state x="140" y="0" key="CommitChangelistDialog2/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587571725368" />
+    <state width="619" height="212" key="GridCell.Tab.0.bottom" timestamp="1587573095185">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="223" y="69" key="MergeDialog/0.0.1280.800@0.0.1280.800" timestamp="1587488377443" />
+    <state width="619" height="212" key="GridCell.Tab.0.bottom/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587573095185" />
+    <state width="619" height="212" key="GridCell.Tab.0.center" timestamp="1587573095181">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="619" height="212" key="GridCell.Tab.0.center/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587573095181" />
+    <state width="619" height="212" key="GridCell.Tab.0.left" timestamp="1587573095180">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="619" height="212" key="GridCell.Tab.0.left/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587573095180" />
+    <state width="619" height="212" key="GridCell.Tab.0.right" timestamp="1587573095183">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="619" height="212" key="GridCell.Tab.0.right/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587573095183" />
+    <state x="223" y="69" key="MergeDialog" timestamp="1587496037333">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="223" y="69" key="MergeDialog/0.0.1280.800@0.0.1280.800" timestamp="1587496037333" />
     <state x="531" y="274" width="407" height="252" key="MultipleFileMergeDialog" timestamp="1587488377480">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="531" y="274" width="407" height="252" key="MultipleFileMergeDialog/0.0.1280.800@0.0.1280.800" timestamp="1587488377480" />
-    <state x="149" y="39" key="SettingsEditor" timestamp="1587488581617">
+    <state x="149" y="39" key="SettingsEditor" timestamp="1587572735157">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="149" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1587488581617" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587490682115">
+    <state x="149" y="39" key="SettingsEditor/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587572735157" />
+    <state x="334" y="123" key="VCS.ChangeListViewerDialog" timestamp="1587490746916">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587490682115" />
-    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587490726215">
+    <state x="334" y="123" key="VCS.ChangeListViewerDialog/0.0.1280.800@0.0.1280.800" timestamp="1587490746916" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587571736172">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587490726215" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587490785027" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587571736172" />
+    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587571467374">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587496397257" />
+    <state x="443" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1280.-737.1920.1080/0.0.1280.800@0.0.1280.800" timestamp="1587571467374" />
     <state x="304" y="195" key="git4idea.merge.GitPullDialog" timestamp="1587489318942">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -188,5 +238,8 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="305" y="124" width="670" height="676" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1587489669468" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MoSis_Simulation$simulation.coverage" NAME="simulation Coverage Results" MODIFIED="1587573095160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

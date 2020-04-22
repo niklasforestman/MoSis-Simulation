@@ -44,7 +44,7 @@ end_dist = pd.DataFrame(columns=['Age','Alive'],index=range(popsize))
 if dev_mode == True:
 
     isolation = 0 #Standardeinstellung: 0
-    infected = 2 #Standardeinstellung: 2
+    infected = 20 #Standardeinstellung: 2
     infection_chance = 40#Standardeinstellung: 60
     recovery = 12 #Standardeinstellung:8
     heavy_case = 10#Standardeinstellung: 2
@@ -431,14 +431,14 @@ while sim_continue(population):
                     isolation_enabled = False
                     #events_enabled = False #Stellt eigenständige Events aus
      #Impfstoff sofort für alle Kranken verfügbar
-    for event in pygame.event.get():
-        if event.type == KEYDOWN and event.key == K_UP:
+    #for event in pygame.event.get():
+        elif event.type == KEYDOWN and event.key == K_UP:
             for people in population:
                 if people.sick or people.infected:
                     people.sick = False
                     people.infected = False
                     people.immune = True
-                    self.image = pygame.image.load("green square 2.jpg")
+                    people.image = pygame.image.load("green square 2.jpg")
 
 
 

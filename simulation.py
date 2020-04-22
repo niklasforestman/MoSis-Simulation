@@ -431,14 +431,14 @@ while sim_continue(population):
                     isolation_enabled = False
                     #events_enabled = False #Stellt eigenständige Events aus
      #Impfstoff sofort für alle Kranken verfügbar
-    for event in pygame.event.get():
-        if event.type == KEYDOWN and event.key == K_UP:
+    #for event in pygame.event.get():
+        elif event.type == KEYDOWN and event.key == K_UP:
             for people in population:
                 if people.sick or people.infected:
                     people.sick = False
                     people.infected = False
                     people.immune = True
-                    self.image = pygame.image.load("green square 2.jpg")
+                    people.image = pygame.image.load("green square 2.jpg")
 
 
 

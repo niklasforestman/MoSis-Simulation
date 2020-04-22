@@ -33,7 +33,10 @@ def godMode():
             if event.type == KEYDOWN and event.key == K_z:
                 statusGodmode = False
                 print("++++++++++++++++++++++++++++++")
-                print(" You are no power here! - or are no longer worhty")
+                print(" You are no power here!")
+                print(" -> or are no longer worhty enough")
+                print(" -> or killed someone innocent")
+                print("")
                 print(" GodMode removed ")
                 print("++++++++++++++++++++++++++++++")
 

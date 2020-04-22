@@ -25,15 +25,18 @@ def godMode():
     #stop the game to run some crazy stuff only a god could possibly do
     #here has to be a while loop with all ralevant steps inside th godMode
     print("++++++++++++++++++++++++++++++")
-    print("I AM GOD!")
+    print("I ... AM ... A ... GOD!")
     print("++++++++++++++++++++++++++++++")
     statusGodmode = True
     while statusGodmode:
         for event in pygame.event.get():
             if event.type == KEYDOWN and event.key == K_z:
                 statusGodmode = False
-                print("You have no power here!")
-                print("GodMode removed")
+                print("++++++++++++++++++++++++++++++")
+                print(" You are no power here! - or are no longer worhty")
+                print(" GodMode removed ")
+                print("++++++++++++++++++++++++++++++")
+
             if event.type == MOUSEBUTTONDOWN :
                 print(event.pos) #Gibt die Position relaitv zur oberen linken Ecke des Fensters aus
                 wululululu(event.pos, population)

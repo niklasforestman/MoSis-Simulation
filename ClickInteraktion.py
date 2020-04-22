@@ -21,7 +21,7 @@ def clickPauseEvent(event, population):
         godMode(population)
 
 
-def godMode():
+def godMode(population):
     #stop the game to run some crazy stuff only a god could possibly do
     #here has to be a while loop with all ralevant steps inside th godMode
     print("++++++++++++++++++++++++++++++")

@@ -26,7 +26,7 @@ dev_mode = True
 result = True
 #Szenario_1: Isolierung aller ab einer bestimmten Infektionszahl
 #Szenario_2: Isolierung von Personen mit Symptomen
-events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
+events_enabled = 2 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 tests_enabled = False
 

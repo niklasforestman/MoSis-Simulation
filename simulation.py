@@ -9,28 +9,24 @@ Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
 """
 
 # Colorcode:
-# - Schwarz: Nicht erkrankt, nicht infiziert
+# - Schwarz: Unbekannt
 # - Grün: Immun
 # - Rosa: Infiziert
 # - Rot: Krank
 # - Dunkelrot: Verstorben
+# - Gelb: Superspreader
 
 #   === INIT ===
 
 import sys
 import pygame
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 from pygame.locals import *
 from random import randint
-import time
 import numpy as np
 import bisect
-import plotly as py
-import plotly.graph_objs as go
-from plotly.offline import iplot
 from Excel_Auswertung import Excel_Auswertung
+from Plot_interaktiv import Plot_interaktiv
 scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 dev_mode = True
@@ -543,45 +539,4 @@ if result == True:
     if Auswertung_Excel:
         Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
-    alive_end = go.Scatter(
-        x=np.arange(np.where(people_alive == 0)[0][0]),
-        y=people_alive[:np.where(people_alive == 0)[0][0]],
-        name='Alive'
-    )
-    immune_end = go.Scatter(
-        x=np.arange(np.where(people_alive == 0)[0][0]),
-        y=people_immune[:np.where(people_alive == 0)[0][0]],
-        name='Immune'
-    )
-    infected_end = go.Scatter(
-        x=np.arange(np.where(people_alive == 0)[0][0]),
-        y=people_infected[:np.where(people_alive == 0)[0][0]],
-        name='Infected'
-    )
-    deceased_end = go.Scatter(
-        x=np.arange(np.where(people_alive == 0)[0][0]),
-        y=people_dead[:np.where(people_alive == 0)[0][0]],
-        name='Deceased'
-    )
-    data = [alive_end, immune_end, infected_end, deceased_end]
-
-    layout = go.Layout(
-        title=go.layout.Title(
-            text='Result'
-        ),
-        xaxis=go.layout.XAxis(
-            title=go.layout.xaxis.Title(
-                text='Days'
-
-            )
-        ),
-        yaxis=go.layout.YAxis(
-            title=go.layout.yaxis.Title(
-                text='Part of Population'
-
-            )
-        )
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-    iplot(fig)
+    Plot_interaktiv(people_alive, people_immune, people_infected, people_dead)

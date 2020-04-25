@@ -9,11 +9,12 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QLabel
+from multiprocessing import Process, Queue
 from functools import partial
 
 
 class GUI_Test(QMainWindow):
-    def __init__(self):
+    def __init__(self,q):
         """View initializer."""
         super().__init__()
         # Set some main window's properties
@@ -26,7 +27,7 @@ class GUI_Test(QMainWindow):
         self._centralWidget.setLayout(self.generalLayout)
         # Create the display and the buttons
         self._createDisplay()
-        self._createButtons()
+        self._createButtons(q)
 
     def _createDisplay(self):
         """Create the display."""
@@ -41,7 +42,7 @@ class GUI_Test(QMainWindow):
 
 
 
-    def _createButtons(self):
+    def _createButtons(self,q):
         """Create the buttons."""
         self.buttons = {}
         buttonsLayout = QGridLayout()
@@ -58,36 +59,38 @@ class GUI_Test(QMainWindow):
             buttonsLayout.addWidget(self.buttons[btnText], pos[0], pos[1])
             # Add buttonsLayout to the general layout
             self.generalLayout.addLayout(buttonsLayout)
-            self.buttons[btnText].clicked.connect(function)
+            self.buttons[btnText].clicked.connect(partial(minus, q) )
 
-def main():
+def gui(q):
     """Main function."""
     # Create an instance of QApplication
     test = QApplication(sys.argv)
     # Show the calculator's GUI
-    view = GUI_Test()
+    view = GUI_Test(q)
     view.show()
     view.display.setText("Test")
     # Execute the calculator's main loop
     sys.exit(test.exec_())
 
 
-def minus():
-    global test_wert
-    test_wert -= 5
-    print(test_wert)
+def minus(q):
+    print('test')
+    q.put(-5)
 
-def plus():
-    global test_wert
-    test_wert += 5
-    print(test_wert)
+
+
+
+#def plus():
+
 
 if __name__ == '__main__':
     test_wert = 50
-    main()
+    q = Queue()
+    p = Process(target= gui, args=(q,))
+    p.start()
 
-
-
-while(True):
-    print(test_wert)
-    time.sleep(2)
+    while(True):
+        print(test_wert)
+        if not q.empty():
+            test_wert = test_wert + q.get()
+        time.sleep(2)

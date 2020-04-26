@@ -44,13 +44,14 @@ def sim_continue(pop):
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
 days = np.ones(100)
 days[0] = 0
-people_infected = np.zeros(1000)
-darkfigure = np.zeros(1000)
-people_immune = np.zeros(1000)
-people_dead = np.zeros(1000)
-people_alive = np.zeros(1000)
-r0_current = np.zeros(1000)
-r0_current_superspreader = np.zeros(1000)
+max_days = 300
+people_infected = np.zeros(max_days)
+darkfigure = np.zeros(max_days)
+people_immune = np.zeros(max_days)
+people_dead = np.zeros(max_days)
+people_alive = np.zeros(max_days)
+r0_current = np.zeros(max_days)
+r0_current_superspreader = np.zeros(max_days)
 
 # === Init pygame ===
 pygame.init()
@@ -166,7 +167,7 @@ if __name__ == "__main__":
                         params.isolation_enabled = False
                         #events_enabled = False #Stellt eigenständige Events aus
          #Impfstoff sofort für alle Kranken verfügbar
-            elif event.type == KEYDOWN and event.key == K_UP:
+            elif (event.type == KEYDOWN and event.key == K_UP):
                 for people in population:
                     if people.sick or people.infected:
                         people.sick = False
@@ -174,6 +175,13 @@ if __name__ == "__main__":
                         people.immune = True
                         people.image = pygame.image.load("green square 2.jpg")
 
+        '''if day_counter == max_days-1:
+                for people in population:
+                   if people.sick or people.infected:
+                        people.sick = False
+                        people.infected = False
+                        people.immune = True
+                        people.image = pygame.image.load("green square 2.jpg")'''
 
 
         if params.events_enabled == 1:

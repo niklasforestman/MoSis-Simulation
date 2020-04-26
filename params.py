@@ -10,7 +10,7 @@ class Params:
     
     def __init__(self):
 
-        self.scale = 300 #Standardeinstellung: 700 #Skalierung
+        self.scale = 700 #Standardeinstellung: 700 #Skalierung
         self.up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
         self.dev_mode = True
         self.result = True

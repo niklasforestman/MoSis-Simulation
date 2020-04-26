@@ -32,6 +32,15 @@ from person import Person
 from person import Person_Statistics
 from statistics import statistics
 
+# === FUNKTIONEN ===
+def sim_continue(pop):
+    """Diese Funktion beschreibt die Endbedingung für das Programm"""
+    all_dead = all(not people.alive for people in pop)
+    all_healed = all(not people.sick and not people.infected for people in pop)
+    return not(all_dead or all_healed)
+
+
+# === INITIALISIERUNG von Paramtern ===
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
 days = np.ones(100)
 days[0] = 0
@@ -43,9 +52,7 @@ people_alive = np.zeros(1000)
 r0_current = np.zeros(1000)
 r0_current_superspreader = np.zeros(1000)
 
-#mortality = 2
-#params.recovery = 15
-
+# === Init pygame ===
 pygame.init()
 params = Params()
 pygame.display.set_caption("Coronavirus Infection Simulation")
@@ -61,15 +68,8 @@ if params.area_grid > 1: #Grenzen erstellen
         grids.append(counter_grid * width / params.area_grid)
 
 
-def sim_continue(pop):
-    """Diese Funktion beschreibt die Endbedingung für das Programm"""
-    all_dead = all(not people.alive for people in pop)
-    all_healed = all(not people.sick and not people.infected for people in pop)
-    return not(all_dead or all_healed)
 
 # === PROGRAM ===
-
-
 if __name__ == "__main__":
     screen = pygame.display.set_mode(size)
     population = []
@@ -166,14 +166,13 @@ if __name__ == "__main__":
                         params.isolation_enabled = False
                         #events_enabled = False #Stellt eigenständige Events aus
          #Impfstoff sofort für alle Kranken verfügbar
-        for event in pygame.event.get():
-            if event.type == KEYDOWN and event.key == K_UP:
+            elif event.type == KEYDOWN and event.key == K_UP:
                 for people in population:
                     if people.sick or people.infected:
                         people.sick = False
                         people.infected = False
                         people.immune = True
-                        self.image = pygame.image.load("green square 2.jpg")
+                        people.image = pygame.image.load("green square 2.jpg")
 
 
 

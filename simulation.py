@@ -41,152 +41,6 @@ def sim_continue(pop):
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
 
-def process1():
-            for person in population:
-                if 'grids' in globals(): # Grenzen existieren
-                    #Grenzen zeichnen
-                    for i in range(len(grids)):
-                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
-
-                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
-
-                    # Koordinate 1
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = person.speed[0] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = 0
-
-                    # Koordinate 2
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = person.speed[1] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = 0
-
-
-def process2():
-            for person in population:
-                person.ps = person.ps.move(person.speed)
-                if person.ps.left < 0 or person.ps.right > width:
-                    person.speed[0] = person.speed[0] * -1
-                if person.ps.top < 0 or person.ps.bottom > height:
-                    person.speed[1] = person.speed[1] * -1
-                for friend in population:
-                    if person is friend:
-                        pass
-                    else:
-                        person.contact(friend)
-                if count == 0:
-                    person.new_step()
-                screen.blit(person.image, person.ps)
-def process3():
-            for person in population:
-                if 'grids' in globals(): # Grenzen existieren
-                    #Grenzen zeichnen
-                    for i in range(len(grids)):
-                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
-
-                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
-
-                    # Koordinate 1
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = person.speed[0] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = 0
-
-                    # Koordinate 2
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = person.speed[1] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = 0
-
-                person.ps = person.ps.move(person.speed)
-                if person.ps.left < 0 or person.ps.right > width:
-                    person.speed[0] = person.speed[0] * -1
-                if person.ps.top < 0 or person.ps.bottom > height:
-                    person.speed[1] = person.speed[1] * -1
-                for friend in population:
-                    if person is friend:
-                        pass
-                    else:
-                        person.contact(friend)
-                if count == 0:
-                    person.new_step()
-                screen.blit(person.image, person.ps)
-def process4():
-            for person in population:
-                if 'grids' in globals(): # Grenzen existieren
-                    #Grenzen zeichnen
-                    for i in range(len(grids)):
-                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
-
-                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
-
-                    # Koordinate 1
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = person.speed[0] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[0] = 0
-
-                    # Koordinate 2
-                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = person.speed[1] * -1
-                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                        if randint(0,100) > params.cross_prob:
-                            person.speed[1] = 0
-
-                person.ps = person.ps.move(person.speed)
-                if person.ps.left < 0 or person.ps.right > width:
-                    person.speed[0] = person.speed[0] * -1
-                if person.ps.top < 0 or person.ps.bottom > height:
-                    person.speed[1] = person.speed[1] * -1
-                for friend in population:
-                    if person is friend:
-                        pass
-                    else:
-                        person.contact(friend)
-                if count == 0:
-                    person.new_step()
-                screen.blit(person.image, person.ps)
-
-
 # === INITIALISIERUNG von Paramtern ===
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
 days = np.ones(100)
@@ -245,61 +99,62 @@ if __name__ == "__main__":
 
     # Creating the Simulation
     while sim_continue(population):
-        count += 1
-        if count == 12:
-            day_counter += 1
+        def process4(count,day_counter):
+            count += 1
+            if count == 12:
+                day_counter += 1
 
 
 
-        #Hilfsvariablen für die Berechnung
-        inf=0
-        inf_2 = 0
-        imm=0
-        dead=0
-        d=0
-        fin =0
-        d2 = 0
-        z2 = 0
-        tested = 0
+            #Hilfsvariablen für die Berechnung
+            inf=0
+            inf_2 = 0
+            imm=0
+            dead=0
+            d=0
+            fin =0
+            d2 = 0
+            z2 = 0
+            tested = 0
 
-        #Durchzählen der Population auf bestimmte Eigenschaften
-        for people in population:
-            if people.infected ==True:
-                inf+=1
-            if (people.infected or people.sick or people.finished) and people.tested:
-                inf_2+=1
-            if people.sick == True:
-                inf+=1
-            if people.immune ==True:
-                imm +=1
-            if people.alive == False:
-                dead +=1
-            if people.finished:
-                fin +=1
-                d+= people.counter
-            if people.tested:
-                tested +=1
+            #Durchzählen der Population auf bestimmte Eigenschaften
+            for people in population:
+                if people.infected ==True:
+                    inf+=1
+                if (people.infected or people.sick or people.finished) and people.tested:
+                    inf_2+=1
+                if people.sick == True:
+                    inf+=1
+                if people.immune ==True:
+                    imm +=1
+                if people.alive == False:
+                    dead +=1
+                if people.finished:
+                    fin +=1
+                    d+= people.counter
+                if people.tested:
+                    tested +=1
 
-        if fin>0:
-            r0_current[day_counter] = d/fin
-        else:
-            r0_current[day_counter] = 0
+            if fin>0:
+                r0_current[day_counter] = d/fin
+            else:
+                r0_current[day_counter] = 0
 
-        people_infected[day_counter]=inf/params.popsize
-        if inf_2==0:
-            darkfigure[day_counter] = 0
-        else:
-            darkfigure[day_counter] = (inf+fin)/inf_2
-        people_immune[day_counter]=imm/params.popsize
-        people_dead[day_counter]=dead/params.popsize
-        people_alive[day_counter]=1-dead/params.popsize
+            people_infected[day_counter]=inf/params.popsize
+            if inf_2==0:
+                darkfigure[day_counter] = 0
+            else:
+                darkfigure[day_counter] = (inf+fin)/inf_2
+            people_immune[day_counter]=imm/params.popsize
+            people_dead[day_counter]=dead/params.popsize
+            people_alive[day_counter]=1-dead/params.popsize
 
-        if count == 12:
-            print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
-                  round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
-                  ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
-                  round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-            count = 0
+            if count == 12:
+                print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
+                      round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
+                      ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
+                      round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
+                count = 0
 
         #params.isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
         for event in pygame.event.get():
@@ -388,19 +243,6 @@ if __name__ == "__main__":
             #end = timer()
             #print("Prozess 1",end-start)
 
-
-        def process3():
-            #start = timer()
-            for person in population:
-                for friend in population:
-                        if person is friend:
-                            pass
-                        else:
-                            person.contact(friend)
-            #end = timer()
-            #print("Prozess 3 contact",end-start)
-
-
         def process2():
             #start = timer()
             for person in population:
@@ -416,14 +258,30 @@ if __name__ == "__main__":
             #end = timer()
             #print("Prozess 2 New Step",end-start)
 
+        def process3():
+            #start = timer()
+            for person in population:
+                for friend in population:
+                        if person is friend:
+                            pass
+                        else:
+                            person.contact(friend)
+            #end = timer()
+            #print("Prozess 3 contact",end-start)
 
-        start1 = timer()
+
+
+
+
+        #start1 = timer()
         process1 = multiprocessing.Process(target=process1())
         process2 = multiprocessing.Process(target=process2())
         process3 = multiprocessing.Process(target=process3())
-        end1 = timer()
-        print("Prozess Gesamt")
-        print (end1 - start1)
+        process4 = multiprocessing.Process(target=process4(count,day_counter))
+
+        #end1 = timer()
+        #print("Prozess Gesamt")
+        #print (end1 - start1)
 
         pygame.display.flip()
 

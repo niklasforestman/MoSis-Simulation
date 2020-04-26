@@ -31,6 +31,8 @@ from params import Params
 from person import Person
 from person import Person_Statistics
 from statistics import statistics
+import multiprocessing
+from timeit import default_timer as timer
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -38,6 +40,151 @@ def sim_continue(pop):
     all_dead = all(not people.alive for people in pop)
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
+
+def process1():
+            for person in population:
+                if 'grids' in globals(): # Grenzen existieren
+                    #Grenzen zeichnen
+                    for i in range(len(grids)):
+                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+
+                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
+
+                    # Koordinate 1
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = person.speed[0] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = 0
+
+                    # Koordinate 2
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = person.speed[1] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = 0
+
+
+def process2():
+            for person in population:
+                person.ps = person.ps.move(person.speed)
+                if person.ps.left < 0 or person.ps.right > width:
+                    person.speed[0] = person.speed[0] * -1
+                if person.ps.top < 0 or person.ps.bottom > height:
+                    person.speed[1] = person.speed[1] * -1
+                for friend in population:
+                    if person is friend:
+                        pass
+                    else:
+                        person.contact(friend)
+                if count == 0:
+                    person.new_step()
+                screen.blit(person.image, person.ps)
+def process3():
+            for person in population:
+                if 'grids' in globals(): # Grenzen existieren
+                    #Grenzen zeichnen
+                    for i in range(len(grids)):
+                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+
+                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
+
+                    # Koordinate 1
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = person.speed[0] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = 0
+
+                    # Koordinate 2
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = person.speed[1] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = 0
+
+                person.ps = person.ps.move(person.speed)
+                if person.ps.left < 0 or person.ps.right > width:
+                    person.speed[0] = person.speed[0] * -1
+                if person.ps.top < 0 or person.ps.bottom > height:
+                    person.speed[1] = person.speed[1] * -1
+                for friend in population:
+                    if person is friend:
+                        pass
+                    else:
+                        person.contact(friend)
+                if count == 0:
+                    person.new_step()
+                screen.blit(person.image, person.ps)
+def process4():
+            for person in population:
+                if 'grids' in globals(): # Grenzen existieren
+                    #Grenzen zeichnen
+                    for i in range(len(grids)):
+                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+
+                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
+
+                    # Koordinate 1
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = person.speed[0] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = 0
+
+                    # Koordinate 2
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = person.speed[1] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = 0
+
+                person.ps = person.ps.move(person.speed)
+                if person.ps.left < 0 or person.ps.right > width:
+                    person.speed[0] = person.speed[0] * -1
+                if person.ps.top < 0 or person.ps.bottom > height:
+                    person.speed[1] = person.speed[1] * -1
+                for friend in population:
+                    if person is friend:
+                        pass
+                    else:
+                        person.contact(friend)
+                if count == 0:
+                    person.new_step()
+                screen.blit(person.image, person.ps)
 
 
 # === INITIALISIERUNG von Paramtern ===
@@ -203,52 +350,73 @@ if __name__ == "__main__":
                     people.isolated = False
 
         screen.fill(white)
-        for person in population:
-            if 'grids' in globals(): # Grenzen existieren
-                #Grenzen zeichnen
-                for i in range(len(grids)):
-                    pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                    pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+        def process1():
+            start = timer()
+            for person in population:
+                if 'grids' in globals(): # Grenzen existieren
+                    #Grenzen zeichnen
+                    for i in range(len(grids)):
+                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
 
-                # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
+                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
 
-                # Koordinate 1
-                if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                    & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                    # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
-                    if randint(0,100) > params.cross_prob:
-                        person.speed[0] = person.speed[0] * -1
-                elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
-                    & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
-                    # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                    if randint(0,100) > params.cross_prob:
-                        person.speed[0] = 0
+                    # Koordinate 1
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = person.speed[0] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[0] = 0
 
-                # Koordinate 2
-                if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                    & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                    # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
-                    if randint(0,100) > params.cross_prob:
-                        person.speed[1] = person.speed[1] * -1
-                elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
-                    & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
-                    # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
-                    if randint(0,100) > params.cross_prob:
-                        person.speed[1] = 0
+                    # Koordinate 2
+                    if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = person.speed[1] * -1
+                    elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
+                        & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
+                        # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
+                        if randint(0,100) > params.cross_prob:
+                            person.speed[1] = 0
 
-            person.ps = person.ps.move(person.speed)
-            if person.ps.left < 0 or person.ps.right > width:
-                person.speed[0] = person.speed[0] * -1
-            if person.ps.top < 0 or person.ps.bottom > height:
-                person.speed[1] = person.speed[1] * -1
-            for friend in population:
-                if person is friend:
-                    pass
-                else:
-                    person.contact(friend)
-            if count == 0:
-                person.new_step()
-            screen.blit(person.image, person.ps)
+            end = timer()
+            print("Prozess 1")
+            print(end-start)
+
+
+        def process2():
+            start = timer()
+            for person in population:
+                person.ps = person.ps.move(person.speed)
+                if person.ps.left < 0 or person.ps.right > width:
+                    person.speed[0] = person.speed[0] * -1
+                if person.ps.top < 0 or person.ps.bottom > height:
+                    person.speed[1] = person.speed[1] * -1
+                for friend in population:
+                    if person is friend:
+                        pass
+                    else:
+                        person.contact(friend)
+                        end = timer()
+                if count == 0:
+                    person.new_step()
+                screen.blit(person.image, person.ps)
+            end = timer()
+            print("Prozess 2 New Step")
+            print(end-start)
+
+        start1 = timer()
+        process1 = multiprocessing.Process(target=process1())
+        process2 = multiprocessing.Process(target=process2())
+        end1 = timer()
+        print("Prozess Gesamt")
+        print (end1 - start1)
 
         pygame.display.flip()
 

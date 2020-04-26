@@ -8,7 +8,7 @@ import bisect
 from Excel_Auswertung import Excel_Auswertung
 from Plot_interaktiv import Plot_interaktiv
 from params import Params
-
+import _multiprocessing
 params = Params()
 
 

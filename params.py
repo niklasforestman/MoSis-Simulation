@@ -16,10 +16,10 @@ class Params:
         self.result = True
         #Szenario_1: Isolierung aller ab einer bestimmten Infektionszahl
         #Szenario_2: Isolierung von Personen mit Symptomen
-        self.events_enabled = 2 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
+        self.events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
         self.isolation_enabled = False #Parameter Definition für die Selbstregulierung
         self.tests_enabled = False
-        self.area_grid = 2 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
+        self.area_grid = 1 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
         self.cross_prob = 10 # Wahrscheinlichkeit eine Grenze bei Erreichen zu Überqueren in Prozent
 
         if self.scale > 600:
@@ -35,10 +35,10 @@ class Params:
         
             self.isolation = 0 #Standardeinstellung: 0
             self.infected = 2 #Standardeinstellung: 2
-            self.infection_chance = 40#Standardeinstellung: 60
-            self.recovery = 12 #Standardeinstellung:8
+            self.infection_chance = 86#Standardeinstellung: 60
+            self.recovery = 8 #Standardeinstellung:8
             self.heavy_case = 10#Standardeinstellung: 2
-            self.incubation_time = 28 #Standardeinstellung: 20
+            self.incubation_time = 40 #Standardeinstellung: 20
             self.superspreader = 50 #Standardeinstellung: 10
             self.testrate = 100
         

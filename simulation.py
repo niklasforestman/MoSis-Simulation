@@ -96,65 +96,11 @@ if __name__ == "__main__":
         population.append(new_person)
 
     people_infected[0] = params.infected/params.popsize
-
+    start = timer()
     # Creating the Simulation
     while sim_continue(population):
-        def process4(count,day_counter):
-            count += 1
-            if count == 12:
-                day_counter += 1
 
-
-
-            #Hilfsvariablen für die Berechnung
-            inf=0
-            inf_2 = 0
-            imm=0
-            dead=0
-            d=0
-            fin =0
-            d2 = 0
-            z2 = 0
-            tested = 0
-
-            #Durchzählen der Population auf bestimmte Eigenschaften
-            for people in population:
-                if people.infected ==True:
-                    inf+=1
-                if (people.infected or people.sick or people.finished) and people.tested:
-                    inf_2+=1
-                if people.sick == True:
-                    inf+=1
-                if people.immune ==True:
-                    imm +=1
-                if people.alive == False:
-                    dead +=1
-                if people.finished:
-                    fin +=1
-                    d+= people.counter
-                if people.tested:
-                    tested +=1
-
-            if fin>0:
-                r0_current[day_counter] = d/fin
-            else:
-                r0_current[day_counter] = 0
-
-            people_infected[day_counter]=inf/params.popsize
-            if inf_2==0:
-                darkfigure[day_counter] = 0
-            else:
-                darkfigure[day_counter] = (inf+fin)/inf_2
-            people_immune[day_counter]=imm/params.popsize
-            people_dead[day_counter]=dead/params.popsize
-            people_alive[day_counter]=1-dead/params.popsize
-
-            if count == 12:
-                print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
-                      round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
-                      ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
-                      round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-                count = 0
+        count += 1
 
         #params.isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
         for event in pygame.event.get():
@@ -265,25 +211,79 @@ if __name__ == "__main__":
                         if person is friend:
                             pass
                         else:
-                            person.contact(friend)
+                            if person.infected or person.sick or person.heavy:
+                                person.contact(friend)
             #end = timer()
             #print("Prozess 3 contact",end-start)
 
+        def process4(count,day_counter):
 
 
+            #Hilfsvariablen für die Berechnung
+            inf=0
+            inf_2 = 0
+            imm=0
+            dead=0
+            d=0
+            fin =0
+            d2 = 0
+            z2 = 0
+            tested = 0
+
+            #Durchzählen der Population auf bestimmte Eigenschaften
+            for people in population:
+                if people.infected ==True:
+                    inf+=1
+                if (people.infected or people.sick or people.finished) and people.tested:
+                    inf_2+=1
+                if people.sick == True:
+                    inf+=1
+                if people.immune ==True:
+                    imm +=1
+                if people.alive == False:
+                    dead +=1
+                if people.finished:
+                    fin +=1
+                    d+= people.counter
+                if people.tested:
+                    tested +=1
+
+            if fin>0:
+                r0_current[day_counter] = d/fin
+            else:
+                r0_current[day_counter] = 0
+
+            people_infected[day_counter]=inf/params.popsize
+            if inf_2==0:
+                darkfigure[day_counter] = 0
+            else:
+                darkfigure[day_counter] = (inf+fin)/inf_2
+            people_immune[day_counter]=imm/params.popsize
+            people_dead[day_counter]=dead/params.popsize
+            people_alive[day_counter]=1-dead/params.popsize
 
 
-        #start1 = timer()
+            print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
+                  round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
+                  ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
+                  round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
+
+        process3 = multiprocessing.Process(target=process3())
+
+        if count==12:
+            end = timer()
+            print("Laufzeit",end-start)
+            start = timer()
+            day_counter += 1
+            process4 = multiprocessing.Process(target=process4(count,day_counter))
+            count = 0
+
         process1 = multiprocessing.Process(target=process1())
         process2 = multiprocessing.Process(target=process2())
-        process3 = multiprocessing.Process(target=process3())
-        process4 = multiprocessing.Process(target=process4(count,day_counter))
-
-        #end1 = timer()
-        #print("Prozess Gesamt")
-        #print (end1 - start1)
 
         pygame.display.flip()
+
+
 
     if params.result == True:
         statistics(population,params,day_counter)

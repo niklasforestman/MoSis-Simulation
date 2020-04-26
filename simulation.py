@@ -351,7 +351,7 @@ if __name__ == "__main__":
 
         screen.fill(white)
         def process1():
-            start = timer()
+            #start = timer()
             for person in population:
                 if 'grids' in globals(): # Grenzen existieren
                     #Grenzen zeichnen
@@ -385,35 +385,42 @@ if __name__ == "__main__":
                         if randint(0,100) > params.cross_prob:
                             person.speed[1] = 0
 
-            end = timer()
-            print("Prozess 1")
-            print(end-start)
+            #end = timer()
+            #print("Prozess 1",end-start)
+
+
+        def process3():
+            #start = timer()
+            for person in population:
+                for friend in population:
+                        if person is friend:
+                            pass
+                        else:
+                            person.contact(friend)
+            #end = timer()
+            #print("Prozess 3 contact",end-start)
 
 
         def process2():
-            start = timer()
+            #start = timer()
             for person in population:
                 person.ps = person.ps.move(person.speed)
                 if person.ps.left < 0 or person.ps.right > width:
                     person.speed[0] = person.speed[0] * -1
                 if person.ps.top < 0 or person.ps.bottom > height:
                     person.speed[1] = person.speed[1] * -1
-                for friend in population:
-                    if person is friend:
-                        pass
-                    else:
-                        person.contact(friend)
-                        end = timer()
+
                 if count == 0:
                     person.new_step()
                 screen.blit(person.image, person.ps)
-            end = timer()
-            print("Prozess 2 New Step")
-            print(end-start)
+            #end = timer()
+            #print("Prozess 2 New Step",end-start)
+
 
         start1 = timer()
         process1 = multiprocessing.Process(target=process1())
         process2 = multiprocessing.Process(target=process2())
+        process3 = multiprocessing.Process(target=process3())
         end1 = timer()
         print("Prozess Gesamt")
         print (end1 - start1)

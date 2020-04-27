@@ -156,6 +156,10 @@ if __name__ == "__main__":
 
         #params.isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
         for event in pygame.event.get():
+
+            # check if Pause button is pressed
+            clickPauseEvent(event, population)
+
             if event.type == KEYDOWN and event.key == K_RIGHT:
                 for people in population:
                     if randint(0,100)<60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
@@ -196,7 +200,6 @@ if __name__ == "__main__":
                     if not people.heavy or people.alive:
                         people.isolated = False
         if params.events_enabled == 2:
-        clickPauseEvent(event, population)
             for people in population:
                 if people.sick:
                     people.isolated = True

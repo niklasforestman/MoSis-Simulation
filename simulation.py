@@ -196,6 +196,7 @@ if __name__ == "__main__":
                     if not people.heavy or people.alive:
                         people.isolated = False
         if params.events_enabled == 2:
+        clickPauseEvent(event, population)
             for people in population:
                 if people.sick:
                     people.isolated = True

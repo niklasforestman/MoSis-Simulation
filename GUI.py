@@ -1,5 +1,3 @@
-import sys
-import time
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
@@ -11,10 +9,11 @@ from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QLabel
 from multiprocessing import Process, Queue
 from functools import partial
+import sys
 
 
 class GUI_Test(QMainWindow):
-    def __init__(self,q):
+    def __init__(self,queue):
         """View initializer."""
         super().__init__()
         # Set some main window's properties
@@ -27,7 +26,7 @@ class GUI_Test(QMainWindow):
         self._centralWidget.setLayout(self.generalLayout)
         # Create the display and the buttons
         self._createDisplay()
-        self._createButtons(q)
+        self._createButtons(queue)
 
     def _createDisplay(self):
         """Create the display."""
@@ -42,7 +41,7 @@ class GUI_Test(QMainWindow):
 
 
 
-    def _createButtons(self,q):
+    def _createButtons(self,queue):
         """Create the buttons."""
         self.buttons = {}
         buttonsLayout = QGridLayout()
@@ -60,45 +59,29 @@ class GUI_Test(QMainWindow):
             # Add buttonsLayout to the general layout
             self.generalLayout.addLayout(buttonsLayout)
 
-        self.buttons['-'].clicked.connect(partial(minus, q))
-        self.buttons['o'].clicked.connect(partial(minus, q))
-        self.buttons['+'].clicked.connect(partial(plus, q))
+        self.buttons['-'].clicked.connect(partial(isolation_down, queue))
+        self.buttons['o'].clicked.connect(partial(isolation_activate, queue))
+        self.buttons['+'].clicked.connect(partial(isolation_up, queue))
 
-def gui(q):
+def gui(queue):
     """Main function."""
     # Create an instance of QApplication
     test = QApplication(sys.argv)
     # Show the calculator's GUI
-    view = GUI_Test(q)
+    view = GUI_Test(queue)
     view.show()
     view.display.setText("Test")
     # Execute the calculator's main loop
     sys.exit(test.exec_())
 
 
-def minus(q):
-    print('test')
-    q.put('isolation_down')
-
-def plus(q):
-    q.put('isolation_up')
-
-if __name__ == '__main__':
-
-    test_wert = 50
-    q = Queue()
-    p = Process(target= gui, args=(q,))
-    p.start()
-
-    while(True):
-        print(test_wert)
-        action = 'none'
-        if not q.empty():
-           action = q.get()
-           if action == 'isolation_down':
-               test_wert = test_wert - 5
-           elif action == 'isolation_up':
-                test_wert = test_wert + 5
+def isolation_down(queue):
+    queue.put('isolation_down')
 
 
-        time.sleep(2)
+def isolation_up(queue):
+    queue.put('isolation_up')
+
+
+def isolation_activate(queue):
+    queue.put('isolation_activate')

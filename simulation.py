@@ -19,6 +19,9 @@ from pygame.locals import *
 from random import randint
 import time
 import numpy as np
+from multiprocessing import Process, Queue
+import GUI
+
 scale = 700 #Standardeinstellung: 700 #Skalierung
 up = 1 ##Standardeinstellung: 1  #Bewegungsgeschwindigkeit der Personen
 dev_mode = True
@@ -28,6 +31,8 @@ result = True
 events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
 isolation_enabled = False #Parameter Definition für die Selbstregulierung
 tests_enabled = False
+event_isolation_population = 60  # Isolierte Bevölkerung nach Isolationsaufruf; Wert zwischen 0 und 100
+event_isolation_active = False  #Status des Isolationsaufrufes
 
 if scale > 600:
     popsize = scale + 600
@@ -322,183 +327,222 @@ def statistics(pop):
 
 
 # === PROGRAM ===
+if __name__ == '__main__':
+    screen = pygame.display.set_mode(size)
+    population = []
 
-screen = pygame.display.set_mode(size)
-population = []
+    #Aufbau der GUI
 
-# Aufbauen der Population
-for i in range(popsize):
-    is_isolated = False
-    is_infected = False
-    is_immune = False
-    is_heavy = False
-    is_superspread = False
-    temp = randint(1, popsize)
-    if temp < isolation: 
-        is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
-    if temp < infected:
-        is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
-    if temp < superspreader:
-        is_superspread = True  # Mit einer gewählten Wahrscheinlichkeit ist die Person superspreader.
-    new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread) #Erstellen eines Objekts Person mit den oben genannten Eigenschaften
-    end_dist['Age'][i] = new_person.age
-    new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10) # Setzen der Personen auf das Spielfeld
-    population.append(new_person)
+    gui_queue = Queue()  #Weg zur Kommunikation zwischen beiden Prozessen
+    gui_process = Process(target= GUI.gui, args = (gui_queue,))
+    gui_process.start()
 
-
-#Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
-days = np.ones(100)
-days[0] = 0
-people_infected = np.zeros(1000)
-darkfigure = np.zeros(1000)
-people_immune = np.zeros(1000)
-people_dead = np.zeros(1000)
-people_alive = np.zeros(1000)
-r0_current = np.zeros(1000)
-r0_current_superspreader = np.zeros(1000)
-people_infected[0] = infected/popsize
-# Creating the Simulation
-while sim_continue(population):
-    count += 1
-    if count == 12:
-        day_counter += 1
-
-    #Hilfsvariablen für die Berechnung
-    inf=0
-    inf_2 = 0
-    imm=0
-    dead=0
-    d=0
-    fin =0
-    d2 = 0
-    z2 = 0
-    tested = 0
-
-    #Durchzählen der Population auf bestimmte Eigenschaften
-    for people in population:
-        if people.infected ==True:
-            inf+=1
-        if (people.infected or people.sick or people.finished) and people.tested:
-            inf_2+=1
-        if people.sick == True:
-            inf+=1
-        if people.immune ==True:
-            imm +=1
-        if people.alive == False:
-            dead +=1
-        if people.finished:
-            fin +=1
-            d+= people.counter
-        if people.tested:
-            tested +=1
-
-    if fin>0:
-        r0_current[day_counter] = d/fin
-    else:
-        r0_current[day_counter] = 0
-
-    people_infected[day_counter]=inf/popsize
-    if inf_2==0:
-        darkfigure[day_counter] = 0
-    else:
-        darkfigure[day_counter] = (inf+fin)/inf_2
-    people_immune[day_counter]=imm/popsize
-    people_dead[day_counter]=dead/popsize
-    people_alive[day_counter]=1-dead/popsize
-
-    if count == 12:
-        print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
-        count = 0
-
-    #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
-    for event in pygame.event.get():
-        if event.type == KEYDOWN and event.key == K_RIGHT:
-            for people in population:
-                if randint(0,100)<60:  #Mit einer Wahrscheinlihckeit von 60% halten sich die Personen an die Regeln
-                    people.isolated = True
-        elif event.type == KEYDOWN and event.key == K_LEFT:
-            for people in population:
-                if not people.heavy or people.alive:
-                    people.isolated = False
-                    isolation_enabled = False
-                    #events_enabled = False #Stellt eigenständige Events aus
-     #Impfstoff sofort für alle Kranken verfügbar
-    for event in pygame.event.get():
-        if event.type == KEYDOWN and event.key == K_UP:
-            for people in population:
-                if people.sick or people.infected:
-                    people.sick = False
-                    people.infected = False
-                    people.immune = True
-                    self.image = pygame.image.load("green square 2.jpg")
+    # Aufbauen der Population
+    for i in range(popsize):
+        is_isolated = False
+        is_infected = False
+        is_immune = False
+        is_heavy = False
+        is_superspread = False
+        temp = randint(1, popsize)
+        if temp < isolation:
+            is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
+        if temp < infected:
+            is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
+        if temp < superspreader:
+            is_superspread = True  # Mit einer gewählten Wahrscheinlichkeit ist die Person superspreader.
+        new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread) #Erstellen eines Objekts Person mit den oben genannten Eigenschaften
+        end_dist['Age'][i] = new_person.age
+        new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10) # Setzen der Personen auf das Spielfeld
+        population.append(new_person)
 
 
+    #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
+    days = np.ones(100)
+    days[0] = 0
+    people_infected = np.zeros(1000)
+    darkfigure = np.zeros(1000)
+    people_immune = np.zeros(1000)
+    people_dead = np.zeros(1000)
+    people_alive = np.zeros(1000)
+    r0_current = np.zeros(1000)
+    r0_current_superspreader = np.zeros(1000)
+    people_infected[0] = infected/popsize
+    # Creating the Simulation
+    while sim_continue(population):
+        count += 1
+        if count == 12:
+            day_counter += 1
 
-    if events_enabled == 1:
-        if people_infected[day_counter] > 0.10 and not isolation_enabled:
-            for people in population:
-                if randint(0,100)<40:  #Mit einer Wahrscheinlihckeit von 40% halten sich die Personen an die Regeln
-                    people.isolated = True
-                isolation_enabled = True
-        elif people_infected[day_counter] < 0.05:
-            isolation_enabled = False
-            for people in population:
-                if not people.heavy or people.alive:
-                    people.isolated = False
-    if events_enabled == 2:
+        #Hilfsvariablen für die Berechnung
+        inf=0
+        inf_2 = 0
+        imm=0
+        dead=0
+        d=0
+        fin =0
+        d2 = 0
+        z2 = 0
+        tested = 0
+
+        #Durchzählen der Population auf bestimmte Eigenschaften
         for people in population:
-            if people.sick:
-                people.isolated = True
-            elif people.immune:
-                people.isolated = False
+            if people.infected ==True:
+                inf+=1
+            if (people.infected or people.sick or people.finished) and people.tested:
+                inf_2+=1
+            if people.sick == True:
+                inf+=1
+            if people.immune ==True:
+                imm +=1
+            if people.alive == False:
+                dead +=1
+            if people.finished:
+                fin +=1
+                d+= people.counter
+            if people.tested:
+                tested +=1
 
-    screen.fill(white)
-    for person in population:
-        person.ps = person.ps.move(person.speed)
-        if person.ps.left < 0 or person.ps.right > width:
-            person.speed[0] = person.speed[0] * -1
-        if person.ps.top < 0 or person.ps.bottom > height:
-            person.speed[1] = person.speed[1] * -1
-        for friend in population:
-            if person is friend:
-                pass
-            else:
-                person.contact(friend)
-        if count == 0:
-            person.new_step()
-        screen.blit(person.image, person.ps)
+        if fin>0:
+            r0_current[day_counter] = d/fin
+        else:
+            r0_current[day_counter] = 0
 
-    pygame.display.flip()
+        people_infected[day_counter]=inf/popsize
+        if inf_2==0:
+            darkfigure[day_counter] = 0
+        else:
+            darkfigure[day_counter] = (inf+fin)/inf_2
+        people_immune[day_counter]=imm/popsize
+        people_dead[day_counter]=dead/popsize
+        people_alive[day_counter]=1-dead/popsize
+
+        if count == 12:
+            print("Tag: ",day_counter,".....","Isolationsaufruf: ",isolation_enabled,".....","r0: ",r0_current[day_counter],".....","aktuell Infizierte: ",people_infected[day_counter],".....","Dunkelziffer: ",darkfigure[day_counter],".....","aktuell Immune: ",people_immune[day_counter],".....","aktuell Verstorbene: ",people_dead[day_counter])
+            count = 0
+        #Events
+
+        button_event = 'none'
+        if not gui_queue.empty():   # liest Daten der GUI aus
+            button_event = gui_queue.get()
+            print(button_event)
+
+        #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
+        for event in pygame.event.get():
+            if (event.type == KEYDOWN and event.key == K_RIGHT) or (button_event == 'isolation_up' ):
+                event_isolation_population = event_isolation_population + 5
+                print(event_isolation_population)
+                if event_isolation_active:
+                    for people in population:
+                        if not people.heavy and people.alive:
+                            people.isolated = False
+                            if (randint(0, 100) < event_isolation_population):
+                                people.isolated = True
+
+            elif (event.type == KEYDOWN and event.key == K_Left) or (button_event == 'isolation_down'):
+                event_isolation_population = event_isolation_population - 5
+                print(event_isolation_population)
+                if event_isolation_active:
+                    for people in population:
+                        if not people.heavy and people.alive:
+                            people.isolated = False
+                            if (randint(0, 100) < event_isolation_population):
+                                people.isolated = True
+
+            elif  (button_event == 'button_activate'):
+
+                if event_isolation_active == False:
+                    event_isolation_active = True
+                    isolation_enabled = True
+                    for people in population:
+                        if (randint(0, 100) < event_isolation_population) and people.alive:
+                            people.isolated = True
+                elif event_isolation_active == True:  # Isolation aufgehoben für nicht-schwer Erkrankte
+                    event_isolation_active = False
+                    isolation_enabled = False
+                    for people in population:
+                        if not people.heavy and people.alive:
+                            people.isolated = False
+                print(event_isolation_population)
+
+
+         #Impfstoff sofort für alle Kranken verfügbar
+        for event in pygame.event.get():
+            if event.type == KEYDOWN and event.key == K_UP:
+                for people in population:
+                    if people.sick or people.infected:
+                        people.sick = False
+                        people.infected = False
+                        people.immune = True
+                        self.image = pygame.image.load("green square 2.jpg")
 
 
 
-print("Days til completion: ", day_counter)
+        if events_enabled == 1:
+            if people_infected[day_counter] > 0.10 and not isolation_enabled:
+                for people in population:
+                    if randint(0,100)<40:  #Mit einer Wahrscheinlihckeit von 40% halten sich die Personen an die Regeln
+                        people.isolated = True
+                    isolation_enabled = True
+            elif people_infected[day_counter] < 0.05:
+                isolation_enabled = False
+                for people in population:
+                    if not people.heavy or people.alive:
+                        people.isolated = False
+        if events_enabled == 2:
+            for people in population:
+                if people.sick:
+                    people.isolated = True
+                elif people.immune:
+                    people.isolated = False
 
-alive, dead, immune, end_dist = statistics(population)
-#stats = statistics(population)
-print("Alive: ", alive)
-print("Dead: ", dead)
-print("Immune: ",immune)
+        screen.fill(white)
+        for person in population:
+            person.ps = person.ps.move(person.speed)
+            if person.ps.left < 0 or person.ps.right > width:
+                person.speed[0] = person.speed[0] * -1
+            if person.ps.top < 0 or person.ps.bottom > height:
+                person.speed[1] = person.speed[1] * -1
+            for friend in population:
+                if person is friend:
+                    pass
+                else:
+                    person.contact(friend)
+            if count == 0:
+                person.new_step()
+            screen.blit(person.image, person.ps)
+
+        pygame.display.flip()
 
 
-if result == True:
-    # === AUSWERTUNG ===
 
-    plt.ylabel('Aktuell Infizierte')
+    print("Days til completion: ", day_counter)
 
-    # Einen x-y-Plot erstellen:
-    plt.plot(people_infected, 'b-')
-    plt.plot(people_immune, 'g-')
-    plt.plot(people_dead, 'r-')
-    plt.plot(people_alive, 'y-')
-    plt.plot(r0_current, 'g-')
+    alive, dead, immune, end_dist = statistics(population)
+    #stats = statistics(population)
+    print("Alive: ", alive)
+    print("Dead: ", dead)
+    print("Immune: ",immune)
 
-    # Achsen-Bereiche manuell festlegen
-    # Syntax: plt.axis([xmin, xmax, ymin, ymax])
-    #plt.axis([0, 5, 0, 20])
 
-    # Ein gepunktetes Diagramm-Gitter einblenden:
-    plt.grid(True)
+    if result == True:
+        # === AUSWERTUNG ===
 
-    # Diagramm anzeigen:
-    plt.show()
+        plt.ylabel('Aktuell Infizierte')
+
+        # Einen x-y-Plot erstellen:
+        plt.plot(people_infected, 'b-')
+        plt.plot(people_immune, 'g-')
+        plt.plot(people_dead, 'r-')
+        plt.plot(people_alive, 'y-')
+        plt.plot(r0_current, 'g-')
+
+        # Achsen-Bereiche manuell festlegen
+        # Syntax: plt.axis([xmin, xmax, ymin, ymax])
+        #plt.axis([0, 5, 0, 20])
+
+        # Ein gepunktetes Diagramm-Gitter einblenden:
+        plt.grid(True)
+
+        # Diagramm anzeigen:
+        plt.show()

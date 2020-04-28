@@ -212,7 +212,7 @@ if __name__ == "__main__":
                             pass
                         else:
                             if person.infected or person.sick or person.heavy:
-                                person.contact(friend)
+                                    person.contact(friend)
             #end = timer()
             #print("Prozess 3 contact",end-start)
 
@@ -267,6 +267,7 @@ if __name__ == "__main__":
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
+
 
         process3 = multiprocessing.Process(target=process3())
 

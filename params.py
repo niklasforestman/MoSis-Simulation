@@ -34,7 +34,7 @@ class Params:
         if self.dev_mode == True:
         
             self.isolation = 0 #Standardeinstellung: 0
-            self.infected = 2 #Standardeinstellung: 2
+            self.infected = 4 #Standardeinstellung: 2
             self.infection_chance = 86#Standardeinstellung: 60
             self.recovery = 8 #Standardeinstellung:8
             self.heavy_case = 10#Standardeinstellung: 2

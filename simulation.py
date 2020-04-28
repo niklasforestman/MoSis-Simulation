@@ -425,45 +425,44 @@ if __name__ == '__main__':
         button_event = 'none'
         if not gui_queue.empty():   # liest Daten der GUI aus
             button_event = gui_queue.get()
-            print(button_event)
 
         #Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
-        for event in pygame.event.get():
-            if (event.type == KEYDOWN and event.key == K_RIGHT) or (button_event == 'isolation_up' ):
-                event_isolation_population = event_isolation_population + 5
-                print(event_isolation_population)
-                if event_isolation_active:
-                    for people in population:
-                        if not people.heavy and people.alive:
-                            people.isolated = False
-                            if (randint(0, 100) < event_isolation_population):
-                                people.isolated = True
+        if (button_event == 'isolation_up'):
+            event_isolation_population = event_isolation_population + 5
 
-            elif (event.type == KEYDOWN and event.key == K_Left) or (button_event == 'isolation_down'):
-                event_isolation_population = event_isolation_population - 5
-                print(event_isolation_population)
-                if event_isolation_active:
-                    for people in population:
-                        if not people.heavy and people.alive:
-                            people.isolated = False
-                            if (randint(0, 100) < event_isolation_population):
-                                people.isolated = True
-
-            elif  (button_event == 'button_activate'):
-
-                if event_isolation_active == False:
-                    event_isolation_active = True
-                    isolation_enabled = True
-                    for people in population:
-                        if (randint(0, 100) < event_isolation_population) and people.alive:
+            if event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) < event_isolation_population):
                             people.isolated = True
-                elif event_isolation_active == True:  # Isolation aufgehoben für nicht-schwer Erkrankte
-                    event_isolation_active = False
-                    isolation_enabled = False
-                    for people in population:
-                        if not people.heavy and people.alive:
-                            people.isolated = False
-                print(event_isolation_population)
+
+
+        elif (button_event == 'isolation_down'):
+            event_isolation_population = event_isolation_population - 5
+            if event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) < event_isolation_population):
+                            people.isolated = True
+
+        elif (button_event == 'isolation_activate'):
+
+            if event_isolation_active == False:
+                event_isolation_active = True
+                isolation_enabled = True
+                for people in population:
+                    if (randint(0, 100) < event_isolation_population) and people.alive:
+                        people.isolated = True
+            elif event_isolation_active == True:  # Isolation aufgehoben für nicht-schwer Erkrankte
+                event_isolation_active = False
+                isolation_enabled = False
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+
+
 
 
          #Impfstoff sofort für alle Kranken verfügbar

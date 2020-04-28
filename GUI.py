@@ -12,42 +12,27 @@ from functools import partial
 import sys
 
 
-class GUI_Test(QMainWindow):
+class GUI(QMainWindow):
     def __init__(self,queue):
-        """View initializer."""
         super().__init__()
         # Set some main window's properties
-        self.setWindowTitle('GUI Test')
-        self.setFixedSize(500, 500)
+        self.setWindowTitle('Events Isolation')
+        self.setFixedSize(250, 150)
         # Set the central widget and the general layout
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
-        # Create the display and the buttons
-        self._createDisplay()
         self._createButtons(queue)
-
-    def _createDisplay(self):
-        """Create the display."""
-        # Create the display widget
-        self.display = QLineEdit()
-        # Set some display's properties
-        self.display.setFixedHeight(35)
-        self.display.setAlignment(Qt.AlignRight)
-        self.display.setReadOnly(True)
-        # Add the display to the general layout
-        self.generalLayout.addWidget(self.display)
-
 
 
     def _createButtons(self,queue):
-        """Create the buttons."""
+
         self.buttons = {}
         buttonsLayout = QGridLayout()
         # Button text | position on the QGridLayout
         buttons = {'-': (0, 0),
-                   'o': (0, 1),
+                   'activate': (0, 1),
                    '+': (0, 2),
                    }
         # Create the buttons and add them to the grid layout
@@ -60,19 +45,18 @@ class GUI_Test(QMainWindow):
             self.generalLayout.addLayout(buttonsLayout)
 
         self.buttons['-'].clicked.connect(partial(isolation_down, queue))
-        self.buttons['o'].clicked.connect(partial(isolation_activate, queue))
+        self.buttons['activate'].clicked.connect(partial(isolation_activate, queue))
         self.buttons['+'].clicked.connect(partial(isolation_up, queue))
 
 def gui(queue):
     """Main function."""
     # Create an instance of QApplication
-    test = QApplication(sys.argv)
-    # Show the calculator's GUI
-    view = GUI_Test(queue)
+    app = QApplication(sys.argv)
+    # Show  GUI
+    view = GUI(queue)
     view.show()
-    view.display.setText("Test")
-    # Execute the calculator's main loop
-    sys.exit(test.exec_())
+    # Execute main loop
+    sys.exit(app.exec_())
 
 
 def isolation_down(queue):

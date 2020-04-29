@@ -44,11 +44,11 @@ def wululululu(pos, population):
     print("y = ", pos[1])
     aoe = 2
     durchzählen = 1
-    for person in population:
-        durchzählen += 1
-        if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
-            print(durchzählen)
-            print("Du sollst vom Blitz getroffen werden")
+    #for person in population:
+    #    durchzählen += 1
+    #    if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
+    #        print(durchzählen)
+    #        print("Du sollst vom Blitz getroffen werden")
     durchzaehlen = 1
     for person in population:
         durchzaehlen += 1
@@ -56,3 +56,4 @@ def wululululu(pos, population):
             print(durchzaehlen)
             print("SPÜRE MEINE MACHT !!!")
             print(person.ps)
+

@@ -32,6 +32,8 @@ from person import Person
 from person import Person_Statistics
 from statistics import statistics
 
+from ClickInteraktion import clickPauseEvent
+
 # === FUNKTIONEN ===
 def sim_continue(pop):
     """Diese Funktion beschreibt die Endbedingung für das Programm"""

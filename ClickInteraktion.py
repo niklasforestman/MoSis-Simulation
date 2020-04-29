@@ -1,13 +1,6 @@
-import sys
 import pygame
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 from pygame.locals import *
-from random import randint
-import time
-import numpy as np
-import time
+
 
 
 
@@ -43,28 +36,23 @@ def godMode(population):
             if event.type == MOUSEBUTTONDOWN :
                 print(event.pos) #Gibt die Position relaitv zur oberen linken Ecke des Fensters aus
                 wululululu(event.pos, population)
-<<<<<<< HEAD
-=======
 
 
->>>>>>> Jan&Tim_Interaktion
+
 def wululululu(pos, population):
     print("X = ", pos[0])
     print("y = ", pos[1])
     aoe = 2
-<<<<<<< HEAD
     durchzählen = 1
     for person in population:
         durchzählen += 1
         if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
             print(durchzählen)
             print("Du sollst vom Blitz getroffen werden")
-=======
     durchzaehlen = 1
     for person in population:
         durchzaehlen += 1
         if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
             print(durchzaehlen)
             print("SPÜRE MEINE MACHT !!!")
->>>>>>> Jan&Tim_Interaktion
             print(person.ps)

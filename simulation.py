@@ -31,7 +31,6 @@ from params import Params
 from person import Person
 from person import Person_Statistics
 from statistics import statistics
-
 from ClickInteraktion import clickPauseEvent
 
 # === FUNKTIONEN ===

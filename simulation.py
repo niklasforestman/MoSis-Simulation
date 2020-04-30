@@ -32,6 +32,8 @@ from person import Person
 from person import Person_Statistics
 from statistics import statistics
 from ClickInteraktion import clickPauseEvent
+from multiprocessing import Process, Queue
+import GUI
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -75,6 +77,11 @@ if params.area_grid > 1: #Grenzen erstellen
 if __name__ == "__main__":
     screen = pygame.display.set_mode(size)
     population = []
+
+    #Aufbau GUI
+    gui_queue = Queue()  #Weg zur Kommunikation zwischen beiden Prozessen
+    gui_process = Process(target= GUI.gui, args = (gui_queue,))
+    gui_process.start()
 
     # Aufbauen der Population
     for i in range(params.popsize):
@@ -154,6 +161,46 @@ if __name__ == "__main__":
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
             count = 0
+
+        button_event = 'none'
+        if not gui_queue.empty():  # liest Daten der GUI aus
+            button_event = gui_queue.get()
+
+        # Isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
+        if (button_event == 'isolation_up'):
+            params.event_isolation_population = params.event_isolation_population + 5
+
+            if params.event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) < params.event_isolation_population):
+                            people.isolated = True
+
+
+        elif (button_event == 'isolation_down'):
+            event_isolation_population = params.event_isolation_population - 5
+            if params.event_isolation_active:
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
+                        if (randint(0, 100) < params.event_isolation_population):
+                            people.isolated = True
+
+        elif (button_event == 'isolation_activate'):
+
+            if params.event_isolation_active == False:
+                params.event_isolation_active = True
+                params.isolation_enabled = True
+                for people in population:
+                    if (randint(0, 100) < params.event_isolation_population) and people.alive:
+                        people.isolated = True
+            elif params.event_isolation_active == True:  # Isolation aufgehoben für nicht-schwer Erkrankte
+                params.event_isolation_active = False
+                params.isolation_enabled = False
+                for people in population:
+                    if not people.heavy and people.alive:
+                        people.isolated = False
 
         #params.isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
         for event in pygame.event.get():

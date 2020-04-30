@@ -21,6 +21,8 @@ class Params:
         self.tests_enabled = False
         self.area_grid = 2 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
         self.cross_prob = 10 # Wahrscheinlichkeit eine Grenze bei Erreichen zu Überqueren in Prozent
+        self.event_isolation_population = 60  # Isolierte Bevölkerung nach Isolationsaufruf; Wert zwischen 0 und 100
+        self.event_isolation_active = False  # Status des Isolationsaufrufes
 
         if self.scale > 600:
             self.popsize = self.scale + 600
@@ -34,7 +36,7 @@ class Params:
         if self.dev_mode == True:
         
             self.isolation = 0 #Standardeinstellung: 0
-            self.infected = 2 #Standardeinstellung: 2
+            self.infected = 10 #Standardeinstellung: 2
             self.infection_chance = 40#Standardeinstellung: 60
             self.recovery = 12 #Standardeinstellung:8
             self.heavy_case = 10#Standardeinstellung: 2

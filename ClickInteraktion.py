@@ -43,12 +43,13 @@ def wululululu(pos, population):
     print("X = ", pos[0])
     print("y = ", pos[1])
     aoe = 2
-    durchzählen = 1
+    #durchzählen = 1
     #for person in population:
     #    durchzählen += 1
     #    if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
     #        print(durchzählen)
     #        print("Du sollst vom Blitz getroffen werden")
+
     durchzaehlen = 1
     for person in population:
         durchzaehlen += 1
@@ -56,4 +57,9 @@ def wululululu(pos, population):
             print(durchzaehlen)
             print("SPÜRE MEINE MACHT !!!")
             print(person.ps)
-
+            #click trough the attributes of the person: alive, dead, infected, heavy, superspread, isolated, immune
+            # create array{with peoples attributes}
+            # for i in (number of elements in array)
+            #   if people.(i element of array)
+            #       people.(i element of array) = false
+            #       people.(i element of array + 1) = true

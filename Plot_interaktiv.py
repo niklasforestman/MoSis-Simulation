@@ -12,7 +12,7 @@ Vorgehen:
 -   Plot wird erstellt
 '''
 
-def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead):
+def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0_current):
 
     alive_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
@@ -34,7 +34,12 @@ def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead):
         y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
         name='Deceased'
     )
-    data = [alive_end, immune_end, infected_end, deceased_end]
+    r0_end = go.Scatter(
+        x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
+        y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
+        name='r0'
+    )
+    data = [alive_end, immune_end, infected_end, deceased_end,r0_end]
 
     layout = go.Layout(
         title=go.layout.Title(

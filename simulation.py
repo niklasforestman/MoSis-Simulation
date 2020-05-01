@@ -248,11 +248,6 @@ if __name__ == "__main__":
                 if people.tested:
                     tested +=1
 
-            if fin>0:
-                r0_current[day_counter] = d/fin
-            else:
-                r0_current[day_counter] = 0
-
             people_infected[day_counter]=inf/params.popsize
             if inf_2==0:
                 darkfigure[day_counter] = 0
@@ -261,6 +256,18 @@ if __name__ == "__main__":
             people_immune[day_counter]=imm/params.popsize
             people_dead[day_counter]=dead/params.popsize
             people_alive[day_counter]=1-dead/params.popsize
+
+            #R0-Berechnung nach RKI: https://www.heise.de/newsticker/meldung/Corona-Pandemie-Die-Mathematik-hinter-den-Reproduktionszahlen-R-4712676.html
+            if day_counter > 4:
+                r0 = (people_infected[day_counter] + people_infected[day_counter-1] + people_infected[day_counter-2] + people_infected[day_counter-3] ) / ( people_infected[day_counter-4] + people_infected[day_counter-5] +people_infected[day_counter-6]+people_infected[day_counter-7])
+                r0_current[day_counter] = r0
+            if day_counter > 4 and day_counter < 6:
+                r0_current[0] = r0
+                r0_current[1] = r0
+                r0_current[2] = r0
+                r0_current[3] = r0
+                r0_current[4] = r0
+
 
 
             print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
@@ -293,4 +300,4 @@ if __name__ == "__main__":
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
-        Plot_interaktiv(people_alive, people_immune, people_infected, people_dead)
+        Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)

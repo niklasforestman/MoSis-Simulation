@@ -33,6 +33,7 @@ from person import Person_Statistics
 from statistics import statistics
 import multiprocessing
 from timeit import default_timer as timer
+from Fitting import fitting
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -300,4 +301,6 @@ if __name__ == "__main__":
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
+        fitting(max_days,day_counter,people_immune)
         Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)
+

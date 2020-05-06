@@ -1,3 +1,5 @@
+#Test für den Hard Reset
+
 """
 Program: Coronavirus Simulation
 Origin Author: Nathan Verghis

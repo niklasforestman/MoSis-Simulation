@@ -46,7 +46,7 @@ def anleitungAuswahl(person):
     print("press [h] for heavy.         The heavy statuts is currenly",person.heavy)
     print("press [d] for dead.          The dead statuts is currenly",person.dead)
     print("press [p] for superspread.   The superspread statuts is currenly",person.superspread)
-    print("press [m] for immune.        The immune statuts is currenly",person.immuneh)
+    print("press [m] for immune.        The immune statuts is currenly",person.immune)
     print("")
     print("press [esc] to pick another person")
     print("press [esc] first and then press [z] to resume the simulation")

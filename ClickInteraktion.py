@@ -46,7 +46,7 @@ def anleitungAuswahl(person):
     print("press [h] for heavy.         The heavy statuts is currenly",person.heavy)
     print("press [d] for dead.          The dead statuts is currenly",person.dead)
     print("press [p] for superspread.   The superspread statuts is currenly",person.superspread)
-    print("press [m] for immune.        The immune statuts is currenly",person.immunes)
+    print("press [m] for immune.        The immune statuts is currenly",person.immuneh)
     print("")
     print("press [esc] to pick another person")
     print("press [esc] first and then press [z] to resume the simulation")
@@ -60,7 +60,7 @@ def pickAStatusAlready(person):
     print("++++++++++++++++++++++++++++++")
     print("AHHHHH I SEE YOU WANNE BE A GOD")
     print("")
-    anleitungAuswahl()
+    anleitungAuswahl(person)
 
     myBreakCondition = True
 
@@ -78,50 +78,50 @@ def pickAStatusAlready(person):
                 elif event.key == pygame.K_s:
                     person.sick = not person.sick
                     print("you pressed [s] for SICK")
-                    print("persons status alive changed from: ", not person.sick)
-                    print("persons status alive is now", person.sick)
+                    print("persons status SICK changed from: ", not person.sick)
+                    print("persons status SICK is now", person.sick)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_i:
                     person.alive = not person.infected
-                    print("you pressed [i] for infected")
-                    print("persons status alive changed from: ", not person.infected)
-                    print("persons status alive is now", person.infected)
+                    print("you pressed [i] for INFECTED")
+                    print("persons status INFECTED changed from: ", not person.infected)
+                    print("persons status INFECTED is now", person.infected)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_o:
                     person.alive = not person.isolated
-                    print("you pressed [o] for isolated")
-                    print("persons status alive changed from: ", not person.isolated)
-                    print("persons status alive is now", person.isolated)
+                    print("you pressed [o] for ISOLATED")
+                    print("persons status ISOLATED changed from: ", not person.isolated)
+                    print("persons status ISOLATED is now", person.isolated)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_h:
                     person.alive = not person.heavy
-                    print("you pressed [h] for heavy")
-                    print("persons status alive changed from: ", not person.heavy)
-                    print("persons status alive is now", person.heavy)
+                    print("you pressed [h] for HEAVY")
+                    print("persons status HEAVY changed from: ", not person.heavy)
+                    print("persons status HEAVY is now", person.heavy)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_d:
                     person.alive = not person.dead
-                    print("you pressed [d] for dead")
-                    print("persons status alive changed from: ", not person.dead)
-                    print("persons status alive is now", person.dead)
+                    print("you pressed [d] for DEAD")
+                    print("persons status DEAD changed from: ", not person.dead)
+                    print("persons status DEAD is now", person.dead)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_p:
                     person.alive = not person.superspread
-                    print("you pressed [p] for superspread")
-                    print("persons status alive changed from: ", not person.superspread)
-                    print("persons status alive is now", person.superspread)
+                    print("you pressed [p] for SUPERSPREAD")
+                    print("persons status SUPERSPREAD changed from: ", not person.superspread)
+                    print("persons status SUPERSPREAD is now", person.superspread)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_m:
                     person.alive = not person.immune
-                    print("you pressed [m] for immune")
-                    print("persons status alive changed from: ", not person.immune)
-                    print("persons status alive is now", person.immune)
+                    print("you pressed [m] for IMMUNE")
+                    print("persons status IMMUNE changed from: ", not person.immune)
+                    print("persons status IMMUNE is now", person.immune)
                     anleitungAuswahl(person)
 
                 elif event.key == pygame.K_ESCAPE:

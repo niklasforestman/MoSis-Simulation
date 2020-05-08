@@ -76,45 +76,7 @@ if params.area_grid > 1: #Grenzen erstellen
         grids.append(counter_grid * width / params.area_grid)
 
 
-
-# === PROGRAM ===
-if __name__ == "__main__":
-    screen = pygame.display.set_mode(size)
-    population = []
-
-    #Aufbau GUI
-    gui_queue = Queue()  #Weg zur Kommunikation zwischen beiden Prozessen
-    gui_process = Process(target= GUI.gui, args = (gui_queue,))
-    gui_process.start()
-
-    # Aufbauen der Population
-    for i in range(params.popsize):
-        is_isolated = False
-        is_infected = False
-        is_immune = False
-        is_heavy = False
-        is_superspread = False
-        temp = randint(1, params.popsize)
-        if temp < params.isolation:
-            is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
-        if temp < params.infected:
-            is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
-        if temp < params.superspreader:
-            is_superspread = True  # Mit einer gewählten Wahrscheinlichkeit ist die Person superspreader.
-        new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread) #Erstellen eines Objekts Person mit den oben genannten Eigenschaften
-        params.end_dist['Age'][i] = new_person.age
-        new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10) # Setzen der Personen auf das Spielfeld
-        population.append(new_person)
-
-    people_infected[0] = params.infected/params.popsize
-    start = timer()
-    # Creating the Simulation
-    while sim_continue(population):
-
-        count += 1
-
-        #Abfrage der GUI und auslösen von Events
-
+def GUI_function():
         button_event = 'none'
         if not gui_queue.empty():  # GUI übermittelt Daten in Form von Strings
             button_event = gui_queue.get()
@@ -180,6 +142,44 @@ if __name__ == "__main__":
                     people.immune = True
                     people.image = pygame.image.load("green square 2.jpg")
 
+
+# === PROGRAM ===
+if __name__ == "__main__":
+    screen = pygame.display.set_mode(size)
+    population = []
+
+    #Aufbau GUI
+    gui_queue = Queue()  #Weg zur Kommunikation zwischen beiden Prozessen
+    gui_process = Process(target= GUI.gui, args = (gui_queue,))
+    gui_process.start()
+
+    # Aufbauen der Population
+    for i in range(params.popsize):
+        is_isolated = False
+        is_infected = False
+        is_immune = False
+        is_heavy = False
+        is_superspread = False
+        temp = randint(1, params.popsize)
+        if temp < params.isolation:
+            is_isolated = True # Mit einer gewählten Wahrscheinlichkeit ist die Person isoliert.
+        if temp < params.infected:
+            is_infected = True # Mit einer gewählten Wahrscheinlichkeit ist die Person infiziert.
+        if temp < params.superspreader:
+            is_superspread = True  # Mit einer gewählten Wahrscheinlichkeit ist die Person superspreader.
+        new_person = Person(is_isolated, is_infected,is_immune,is_heavy,is_infected,is_superspread) #Erstellen eines Objekts Person mit den oben genannten Eigenschaften
+        params.end_dist['Age'][i] = new_person.age
+        new_person.ps = new_person.ps.move(new_person.left*10, new_person.top*10) # Setzen der Personen auf das Spielfeld
+        population.append(new_person)
+
+    people_infected[0] = params.infected/params.popsize
+    start = timer()
+    # Creating the Simulation
+    while sim_continue(population):
+
+        count += 1
+
+        #Abfrage der GUI und auslösen von Events
 
 
 
@@ -362,7 +362,7 @@ if __name__ == "__main__":
 
 
         process3 = multiprocessing.Process(target=process3())
-
+        GUI_function()
         if count==12:
             end = timer()
             print("Laufzeit",end-start)

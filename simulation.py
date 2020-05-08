@@ -1,4 +1,4 @@
-#Test für den Hard Reset
+#VERSION 0.3
 
 """
 Program: Coronavirus Simulation

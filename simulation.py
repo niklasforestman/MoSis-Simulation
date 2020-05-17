@@ -39,6 +39,8 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
+from pylab import plot
+from drawnow import drawnow, figure
 
 # === FUNKTIONEN ===
 def sim_continue(pop):

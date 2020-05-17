@@ -365,7 +365,8 @@ if __name__ == "__main__":
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-
+            if day_counter % 10 == 0:
+                fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
 
         process3 = multiprocessing.Process(target=process3())
         GUI_function()
@@ -391,6 +392,6 @@ if __name__ == "__main__":
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
-        #fitting(max_days,day_counter,people_immune)
+        fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
         Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)
 

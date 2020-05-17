@@ -39,7 +39,8 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
-from Live_Plt import Live_Plt
+from pylab import *
+from drawnow import drawnow, figure
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -47,6 +48,27 @@ def sim_continue(pop):
     all_dead = all(not people.alive for people in pop)
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
+
+def drawfkt():
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
 
 # === INITIALISIERUNG von Paramtern ===
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
@@ -175,6 +197,7 @@ if __name__ == "__main__":
 
     people_infected[0] = params.infected/params.popsize
     start = timer()
+    figure()
     # Creating the Simulation
     while sim_continue(population):
 
@@ -456,7 +479,7 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
-            Live_Plt(people_alive, people_immune, people_infected, people_dead, r0_current)
+            drawnow(drawfkt)
             count = 0
 
         process1 = multiprocessing.Process(target=process1())
@@ -475,4 +498,3 @@ if __name__ == "__main__":
 
         #fitting(max_days,day_counter,people_immune)
         Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)
-

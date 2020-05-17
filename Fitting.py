@@ -4,10 +4,11 @@ import scipy.optimize as opt
 import os
 import xlrd
 import pandas as pd
+from timeit import default_timer as timer
 
 
 def fitting(start,max_days, day_counter, people_immune,people_infected):
-
+    start1 = timer()
     day_counter = day_counter
 
     days = np.zeros(day_counter)
@@ -44,7 +45,7 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
 
     print('S: ',params[0],' k: ',params[1])
 
-    params2, params_covariance2 = opt.curve_fit(test_func2,days,berechnung_people_infected,p0=[0.2,1,0.01],bounds=(0, [1.,10, 0.5]))
+    params2, params_covariance2 = opt.curve_fit(test_func2,days,berechnung_people_infected,p0=[0.2,1,0.01],bounds=(0, [1,10, 0.5]))
 
     print('a: ',params2[0],' b: ',params2[1],' c: ',params2[2])
 
@@ -77,7 +78,8 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
     ax1.plot(days_total, s4, 'r-')
     ax1.set_ylabel('FIT', color='r')
     ax1.tick_params('y', colors='r')
-
+    end = timer()
+    print(end-start1)
     fig.tight_layout()
     plt.show()
 

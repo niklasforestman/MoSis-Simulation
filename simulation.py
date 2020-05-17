@@ -400,6 +400,7 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
+            drawnow(drawfkt)
             count = 0
 
         process1 = multiprocessing.Process(target=process1())

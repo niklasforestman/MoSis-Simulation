@@ -198,6 +198,7 @@ if __name__ == "__main__":
 
     people_infected[0] = params.infected/params.popsize
     start = timer()
+    figure()
     # Creating the Simulation
     while sim_continue(population):
 

@@ -49,6 +49,28 @@ def sim_continue(pop):
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
 
+def drawfkt():
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    plot(x,y)
+
+
 # === INITIALISIERUNG von Paramtern ===
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
 days = np.ones(100)

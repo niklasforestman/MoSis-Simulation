@@ -39,6 +39,7 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
+from Live_Plt import Live_Plt
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -455,6 +456,7 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
+            Live_Plt(people_alive, people_immune, people_infected, people_dead, r0_current)
             count = 0
 
         process1 = multiprocessing.Process(target=process1())

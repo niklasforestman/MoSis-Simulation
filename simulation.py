@@ -55,6 +55,12 @@ def drawfkt():
     line_1, = plot(x,y, 'k')
     line_1.set_label('Alive')
 
+    if day_counter > 11:
+        x=days_total
+        y=fit2
+        line_1, = plot(x,y, 'b')
+        line_1.set_label('FIT')
+
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y, '#B5E51D')
@@ -403,8 +409,9 @@ if __name__ == "__main__":
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-            if day_counter % 10 == 0:
-                fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
+            #if day_counter % 10 == 0:
+                #fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
+                #print('test')
 
         process3 = multiprocessing.Process(target=process3())
         GUI_function()
@@ -414,6 +421,8 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
+            if day_counter > 9 and day_counter % 12 == 0:
+                fit1,fit2,days_total = fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
             drawnow(drawfkt)
             count = 0
 
@@ -431,5 +440,4 @@ if __name__ == "__main__":
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
-        fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
         Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)

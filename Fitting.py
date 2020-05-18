@@ -15,7 +15,7 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
     days_total = np.zeros(max_days)
     berechnung_people_immune = np.ones(day_counter)
     berechnung_people_infected = np.ones(day_counter)
-    for i in range (0,max_days):
+    for i in range (0,day_counter+30):
         days_total[i] = i+1
     for i in range (0,day_counter):
         days[i] = i+1
@@ -38,18 +38,22 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
 
     #Es werden die parameter der zu fittenden Funktion bestimmt.
     # Dabei werden Unter- und Obergrenzen der jeweiligen Paramter vorgegeben umd das Fitting zu verbessern und zu beschleunigen - Stimmt das?!?
-    params, params_covariance = opt.curve_fit(test_func,days,berechnung_people_immune,p0=[0.66,0.1],bounds=(0, [1., 2]))
+    params1, params_covariance = opt.curve_fit(test_func,days,berechnung_people_immune,p0=[0.66,0.1],bounds=(0, [1., 2]))
 
-    if day_counter < 30:
-        print("Achtung: Zu wenige Daten als Grundlage für Fit")
+    #if day_counter < 30:
+    #    print("Achtung: Zu wenige Daten als Grundlage für Fit")
 
-    print('S: ',params[0],' k: ',params[1])
+    #print('S: ',params1[0],' k: ',params1[1])
 
-    params2, params_covariance2 = opt.curve_fit(test_func2,days,berechnung_people_infected,p0=[0.2,1,0.01],bounds=(0, [1,10, 0.5]))
+    params2, params_covariance2 = opt.curve_fit(test_func2,days,berechnung_people_infected,p0=[0.2,1,0.01],bounds=(0, [0.5,10, 0.5]))
 
-    print('a: ',params2[0],' b: ',params2[1],' c: ',params2[2])
+    #print('a: ',params2[0],' b: ',params2[1],' c: ',params2[2])
 
+    s3 = test_func(days_total,params1[0],params1[1])
+    s4 = test_func2(days_total,params2[0],params2[1],params2[2])
+    return(s3,s4,days_total)
 
+    """
     fig, ax1 = plt.subplots()
 
     s1 = berechnung_people_immune
@@ -81,5 +85,5 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
     end = timer()
     print(end-start1)
     fig.tight_layout()
-    plt.show()
+    plt.show()"""
 

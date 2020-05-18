@@ -39,7 +39,7 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
-from pylab import plot, legend, xlabel, ylabel, plt
+from pylab import plot, legend, xlabel, ylabel, plt, ylim
 from drawnow import drawnow, figure
 
 # === FUNKTIONEN ===
@@ -52,37 +52,36 @@ def sim_continue(pop):
 def drawfkt():
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    line_1, = plot(x,y)
+    line_1, = plot(x,y, 'k')
     line_1.set_label('Alive')
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    plot(x,y)
-    line_1, = plot(x,y)
+    line_1, = plot(x,y, '#B5E51D')
     line_1.set_label('Immune')
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    plot(x,y)
-    line_1, = plot(x,y)
+    line_1, = plot(x,y,'#FEAEC9')
     line_1.set_label('Infected')
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    plot(x,y)
-    line_1, = plot(x,y)
+    line_1, = plot(x,y,'#FE0000')
     line_1.set_label('Deceased')
-
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    plot(x,y)
-    line_1, = plot(x,y)
-    line_1.set_label("$R_0$")
-
+    ylim(0,1.2)
+    legend(loc='upper center', ncol=2)
     plt.title('Live - Entwicklung, Tag: %i' %day_counter)
-    legend()
     xlabel('Days')
     ylabel('Part of Population')
+
+    plt2 = plt.twinx()
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    line_1, = plt2.plot(x,y)
+    line_1.set_label("$R_0$")
+    plt2.legend(loc='upper right')
+    plt2.set_ylabel('$R_0$')
 
 
 # === INITIALISIERUNG von Paramtern ===

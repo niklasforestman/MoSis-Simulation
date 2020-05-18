@@ -62,8 +62,8 @@ class Person:
                 self.image = pygame.image.load("green square 2.jpg")
             if infected:
                 self.image = pygame.image.load("rosa box.jpg")
-            if superspread:
-                self.image = pygame.image.load("yellow box 2.jpg")
+            #if superspread:
+            #    self.image = pygame.image.load("yellow box 2.jpg")
             else:
                 self.image = pygame.image.load("black box.jpg")
             self.ps = self.image.get_rect()

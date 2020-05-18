@@ -43,7 +43,7 @@ class Params:
             self.recovery = 8 #Standardeinstellung:8
             self.heavy_case = 10#Standardeinstellung: 2
             self.incubation_time = 40 #Standardeinstellung: 20
-            self.superspreader = 50 #Standardeinstellung: 10
+            self.superspreader = 500 #Standardeinstellung: 10
             self.testrate = 100
         
         else:

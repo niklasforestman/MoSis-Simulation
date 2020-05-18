@@ -1,4 +1,4 @@
-from pylab import *
+from pylab import plot, legend, xlabel, ylabel, plt
 from drawnow import drawnow, figure
 from random import randint
 

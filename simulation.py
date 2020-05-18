@@ -77,7 +77,7 @@ def drawfkt():
     y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     plot(x,y)
     line_1, = plot(x,y)
-    line_1.set_label('R0')
+    line_1.set_label("$R_0$")
 
     plt.title('Live - Entwicklung, Tag: %i' %day_counter)
     legend()

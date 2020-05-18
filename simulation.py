@@ -39,6 +39,8 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
+from ini import *
+
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -60,9 +62,14 @@ people_alive = np.zeros(max_days)
 r0_current = np.zeros(max_days)
 r0_current_superspreader = np.zeros(max_days)
 
+# === Init Parameter
+params = Params()
+ini_start()
+para = new_parameter()
+print(para.testrate)
+
 # === Init pygame ===
 pygame.init()
-params = Params()
 pygame.display.set_caption("Coronavirus Infection Simulation")
 size = width, height = params.scale, params.scale
 speed = [25, 0]

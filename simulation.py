@@ -79,7 +79,7 @@ def drawfkt():
     line_1, = plot(x,y)
     line_1.set_label('R0')
 
-    plt.title('Live - Entwicklung')
+    plt.title('Live - Entwicklung, Tag: %i' %day_counter)
     legend()
     xlabel('Days')
     ylabel('Part of Population')

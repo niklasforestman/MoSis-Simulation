@@ -1,24 +1,38 @@
 import pygame
 from pygame.locals import *
-import ClickInteractionGUI
-
+from ClickInteractionGUI import myApplication
+from PyQt5.QtWidgets import QApplication, QLineEdit, QLabel, QWidget, QPushButton, QVBoxLayout , QHBoxLayout
 
 def clickPauseEvent(event, population):
     # is activated via the 'P' for PAUSE key
     #    later versions might include a nice big shiny button insode the GUI
     if event.type == KEYDOWN and event.key == K_p:
-        print("++++++++++++++++++++++++++++++")
-        print( "EngageGodMode")
-        print("++++++++++++++++++++++++++++++")
-        godMode(population)
+
+        app = QApplication([])
+
+        myProgramm = myApplication()
+        myProgramm.makeCenterLabel('GODMODE engaged', myProgramm.layout, 'bold')
+
+        for person in population:
+            durchzaehlen += 1
+            if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
+                myProgramm.makeLeftLabel('You Chose a Person at The following position', myProgramm.layout, 'normal')
+                myProgramm.makeLeftLabel("x position:" + str(event.pos[0]), myProgramm.layout, 'normal')
+                myProgramm.makeLeftLabel("y position:" + str(event.pos[1]), myProgramm.layout, 'normal')
+
+        if pearsonHit == False:
+            myProgramm.makeLeftLabel('Dude... thats not a Person', myProgramm.layout, 'mormal')
+
+
+
+        myProgramm.createBushButton('Another person', myProgramm.printSomething, myProgramm.layout)
+
+        myProgramm.window.show()
+
+        app.exec_()
 
 
 def godMode(population):
-    #stop the game to run some crazy stuff only a god could possibly do
-    #here has to be a while loop with all ralevant steps inside th godMode
-    print("++++++++++++++++++++++++++++++")
-    print("I ... AM ... A ... GOD!")
-    print("++++++++++++++++++++++++++++++")
     statusGodmode = True
     while statusGodmode:
         for event in pygame.event.get():

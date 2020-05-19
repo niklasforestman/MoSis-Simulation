@@ -21,6 +21,7 @@ Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
 import sys
 import pygame
 import pandas as pd
+import matplotlib
 from pygame.locals import *
 from random import randint
 import numpy as np

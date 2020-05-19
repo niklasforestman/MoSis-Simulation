@@ -12,8 +12,9 @@ from PyQt5.QtCore import pyqtSlot
 import sys #Wird zum Schließen des Programms benötigt
 
 class myApplication(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, person):
         super().__init__()
+        self.derAuserwaelhte = person
 
         '''
         self.windowXPos = 320
@@ -38,6 +39,13 @@ class myApplication(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.window.setLayout(self.layout)
 
+    def werteEintragen(self):
+        if self.AuswahlLeben.currentText() == 'Leben':
+            self.derAuserwaelhte.alive = True
+        else:
+            self.derAuserwaelhte.alive = False
+
+
 
 
     def guiInteractionSetup(self):
@@ -49,10 +57,10 @@ class myApplication(QtWidgets.QWidget):
         self.AuswahlLeben = QtWidgets.QComboBox()
         self.AuswahlLeben.addItems(['Leben', 'Sterben'])
 
-        self.labelImmun = QtWidgets.QLabel(self)
-        self.labelImmun.setText('Zustand 2')
-        self.AuswahlLeben = QtWidgets.QComboBox()
-        self.AuswahlLeben.addItems(['immun', 'nicht immun'])
+        self.labelImmune = QtWidgets.QLabel(self)
+        self.labelImmune.setText('Zustand 2')
+        self.AuswahlImmune = QtWidgets.QComboBox()
+        self.AuswahlImmune.addItems(['immun', 'nicht immun'])
 
         self.labelIsolated = QtWidgets.QLabel(self)
         self.labelIsolated.setText('Zustand 3')
@@ -62,12 +70,25 @@ class myApplication(QtWidgets.QWidget):
         self.labelInfected = QtWidgets.QLabel(self)
         self.labelInfected.setText('Zustand 4')
         self.AuswahlInfected = QtWidgets.QComboBox()
-        self.AuswahlInfected.addItems(['ifiziert', 'nicht infiziert'])
+        self.AuswahlInfected.addItems(['infiziert', 'nicht infiziert'])
 
         self.labelSick = QtWidgets.QLabel(self)
         self.labelSick.setText('Zustand 5')
-        self.AuswahlInfected = QtWidgets.QComboBox()
-        self.AuswahlInfected.addItems(['ifiziert', 'nicht infiziert'])
+        self.AuswahlSick = QtWidgets.QComboBox()
+        self.AuswahlSick.addItems(['krank', 'nicht krank'])
+
+        self.labelHeavy = QtWidgets.QLabel(self)
+        self.labelHeavy.setText('Zustand 6')
+        self.AuswahlHeavy = QtWidgets.QComboBox()
+        self.AuswahlHeavy.addItems(['schwer', 'nicht schwer'])
+
+        self.labelSuperspread = QtWidgets.QLabel(self)
+        self.labelSuperspread.setText('Zustand 7')
+        self.AuswahlSuperspread = QtWidgets.QComboBox()
+        self.AuswahlSuperspread.addItems(['Superspread', 'kein Superspread'])
+
+        self.button1 = QtWidgets.QPushButton('Auswahl Bestätigen')
+        self.button1.clicked.connect(self.werteEintragen)
 
 
 
@@ -77,6 +98,26 @@ class myApplication(QtWidgets.QWidget):
 
         self.layout.addWidget(self.schroedingersLabel)
         self.layout.addWidget(self.AuswahlLeben)
+
+        self.layout.addWidget(self.labelImmune)
+        self.layout.addWidget(self.AuswahlImmune)
+
+        self.layout.addWidget(self.labelIsolated)
+        self.layout.addWidget(self.AuswahlIsolated)
+
+        self.layout.addWidget(self.labelInfected)
+        self.layout.addWidget(self.AuswahlInfected)
+
+        self.layout.addWidget(self.labelSick)
+        self.layout.addWidget(self.AuswahlSick)
+
+        self.layout.addWidget(self.labelHeavy)
+        self.layout.addWidget(self.AuswahlHeavy)
+
+        self.layout.addWidget(self.labelSuperspread)
+        self.layout.addWidget(self.AuswahlSuperspread)
+
+        self.layout.addWidget(self.button1)
 
         self.setLayout(self.layout)
 

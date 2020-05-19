@@ -32,6 +32,8 @@ class Person:
     def __init__(self, isolated, sick,immune,heavy,infected,superspread):
         p_stat = Person_Statistics()
         self.counter = 0
+        self.grenzevent_x = 0
+        self.grenzevent_y = 0
         self.alive = True
         self.immune = False
         self.isolated = isolated

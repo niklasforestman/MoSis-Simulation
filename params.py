@@ -19,8 +19,9 @@ class Params:
         self.events_enabled = 0 # Bei bestimmten Punkten reguliert sich das System probehalber selbst.
         self.isolation_enabled = False #Parameter Definition für die Selbstregulierung
         self.tests_enabled = False
-        self.area_grid = 1 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
+        self.area_grid = 3 # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
         self.cross_prob = 10 # Wahrscheinlichkeit eine Grenze bei Erreichen zu Überqueren in Prozent
+        self.grenze_penalty = 10 #Bestimmt, wie stark (wie viele Zeitschritte) sich Personen von der Grenze wegbewegen, Standard: 10
         self.event_isolation_population = 70  # Isolierte Bevölkerung nach Isolationsaufruf; Wert zwischen 0 und 100
         self.event_isolation_active = False  # Status des Isolationsaufrufes
         self.event_vaccination_rate = 70

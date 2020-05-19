@@ -254,10 +254,19 @@ if __name__ == "__main__":
                         # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
                         if randint(0,100) > params.cross_prob:
                             person.speed[0] = person.speed[0] * -1
+                            if person.speed[0] < 0:
+                                person.grenzevent_x = -params.grenze_penalty
+                            else:
+                                person.grenzevent_x = params.grenze_penalty
+
                     elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) != bisect.bisect_left(grids, person.ps[0])):
                         # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
                         if randint(0,100) > params.cross_prob:
+                            if person.speed[0] > 0:
+                                person.grenzevent_x = -params.grenze_penalty
+                            else:
+                                person.grenzevent_x = params.grenze_penalty
                             person.speed[0] = 0
 
                     # Koordinate 2
@@ -266,10 +275,18 @@ if __name__ == "__main__":
                         # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
                         if randint(0,100) > params.cross_prob:
                             person.speed[1] = person.speed[1] * -1
+                            if person.speed[1] < 0:
+                                person.grenzevent_y = -params.grenze_penalty
+                            else:
+                                person.grenzevent_y = params.grenze_penalty
                     elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) != bisect.bisect_left(grids, person.ps[1])):
                         # Person überschreitet Grenze bei Vorwärts- und Rückwärtsbewegung
                         if randint(0,100) > params.cross_prob:
+                            if person.speed[1] > 0:
+                                person.grenzevent_y = -params.grenze_penalty
+                            else:
+                                person.grenzevent_y = params.grenze_penalty
                             person.speed[1] = 0
 
             #end = timer()
@@ -278,6 +295,21 @@ if __name__ == "__main__":
         def process2():
             #start = timer()
             for person in population:
+                #Die beiden ifs sollen Personen daran hindern, an der Grenze kleben zu bleiben
+                if person.grenzevent_x < 0:
+                    person.speed[0] = randint(-4,0)*params.up
+                    person.grenzevent_x += 1
+                elif person.grenzevent_x > 0:
+                    person.speed[0] = randint(0,4)*params.up
+                    person.grenzevent_x -= 1
+
+                if person.grenzevent_y < 0:
+                    person.speed[1] = randint(-4,0)*params.up
+                    person.grenzevent_y += 1
+                elif person.grenzevent_y > 0:
+                    person.speed[1] = randint(0,4)*params.up
+                    person.grenzevent_y -= 1
+
                 person.ps = person.ps.move(person.speed)
                 if person.ps.left < 0 or person.ps.right > width:
                     person.speed[0] = person.speed[0] * -1

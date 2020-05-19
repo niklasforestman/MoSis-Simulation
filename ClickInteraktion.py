@@ -144,7 +144,10 @@ def wululululu(pos, population):
         if abs(person.ps[0] - pos[0]) <= aoe and abs(person.ps[1] - pos[1]) <= aoe:
             pearsonHit = True
 
-            pickAStatusAlready(person)
+            #pickAStatusAlready(person)
+            #--------------------------------------------------------------------------------------
+            ClickInteractionGUI.guiErstellen(person)
+            #--------------------------------------------------------------------------------------
 
             print(durchzaehlen)
             print(person.ps)

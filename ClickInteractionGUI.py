@@ -11,6 +11,18 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import pyqtSlot
 import sys #Wird zum Schließen des Programms benötigt
 
+import person
+
+class guiErstellen():
+    def __init__(self, Proband):
+        app = QtWidgets.QApplication([])
+        interactionGUI = myApplication(Proband)
+
+        interactionGUI.show()
+        ret = app.exec_()
+        sys.exit(ret)
+
+
 class myApplication(QtWidgets.QWidget):
     def __init__(self, person):
         super().__init__()
@@ -40,12 +52,46 @@ class myApplication(QtWidgets.QWidget):
         self.window.setLayout(self.layout)
 
     def werteEintragen(self):
+        print(self.derAuserwaelhte.immune)
         if self.AuswahlLeben.currentText() == 'Leben':
             self.derAuserwaelhte.alive = True
+            self.derAuserwaelhte.dead = False
         else:
             self.derAuserwaelhte.alive = False
+            self.derAuserwaelhte.dead = True
+
+        if self.AuswahlImmune.currentText() == 'immun':
+            self.derAuserwaelhte.immune = True
+        else:
+            self.derAuserwaelhte.immune = False
+
+        if self.AuswahlIsolated.currentText() == 'isoliert':
+            self.derAuserwaelhte.isolated = True
+        else:
+            self.derAuserwaelhte.isolated = False
+
+        if self.AuswahlInfected.currentText() == 'infiziert':
+            self.derAuserwaelhte.infected = True
+        else:
+            self.derAuserwaelhte.infected = False
+
+        if self.AuswahlSick.currentText() == 'krank':
+            self.derAuserwaelhte.sick = True
+        else:
+            self.derAuserwaelhte.sick = False
+
+        if self.AuswahlHeavy.currentText() == 'schwer':
+            self.derAuserwaelhte.heavy = True
+        else:
+            self.derAuserwaelhte.heavy = False
+
+        if self.AuswahlSuperspread.currentText() == 'Superspread':
+            self.derAuserwaelhte.superspread = True
+        else:
+            self.derAuserwaelhte.superspread = False
 
 
+        print(self.derAuserwaelhte.immune )
 
 
     def guiInteractionSetup(self):
@@ -128,9 +174,12 @@ class myApplication(QtWidgets.QWidget):
 
 
 if __name__ == '__main__':
+
+    Proband = person.Person(False, False, False, False, False, False )
+
     app = QtWidgets.QApplication([])
-    interactionGUI = myApplication()
-    # auswertung.plot()
+    interactionGUI = myApplication(Proband)
+
     interactionGUI.show()
     ret = app.exec_()
     sys.exit(ret)

@@ -50,16 +50,23 @@ def sim_continue(pop):
     return not(all_dead or all_healed)
 
 def drawfkt():
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    line_1, = plot(x,y, 'k')
-    line_1.set_label('Alive')
+    if day_counter > 30:
+        x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+        y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+        line_1, = plot(x,y, 'k')
+        line_1.set_label('Alive')
 
     if day_counter > 11:
         x=days_total
         y=fit2
         line_1, = plot(x,y, 'b')
-        line_1.set_label('FIT')
+        line_1.set_label('FIT Infected')
+
+        x=days_total
+        y=fit1
+        line_1, = plot(x,y, 'y')
+        line_1.set_label('FIT Immune')
+
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
@@ -421,7 +428,7 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
-            if day_counter > 9 and day_counter % 12 == 0:
+            if day_counter > 9 and day_counter % 6 == 0:
                 fit1,fit2,days_total = fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
             drawnow(drawfkt)
             count = 0

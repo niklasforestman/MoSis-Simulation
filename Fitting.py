@@ -12,7 +12,7 @@ def fitting(start,max_days, day_counter, people_immune,people_infected):
     day_counter = day_counter
 
     days = np.zeros(day_counter)
-    days_total = np.zeros(max_days)
+    days_total = np.zeros(day_counter+30)
     berechnung_people_immune = np.ones(day_counter)
     berechnung_people_infected = np.ones(day_counter)
     for i in range (0,day_counter+30):

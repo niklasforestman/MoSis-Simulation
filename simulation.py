@@ -50,30 +50,34 @@ def sim_continue(pop):
     return not(all_dead or all_healed)
 
 def drawfkt():
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    line_1, = plot(x,y, 'k')
-    line_1.set_label('Alive')
+    '''
+    # Vorerst entfernt, weil dadurch eigentlich interessanter Verlauf eingeschränkt sichtbar
+    if day_counter > 20:
+        x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+        y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+        line_1, = plot(x,100*y, 'k')
+        line_1.set_label('Alive')
+        ylim(0,1.2)
+        '''
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    y=100*people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y, '#B5E51D')
     line_1.set_label('Immune')
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    y=100*people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y,'#FEAEC9')
     line_1.set_label('Infected')
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-    y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    y=100*people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y,'#FE0000')
     line_1.set_label('Deceased')
-    ylim(0,1.2)
-    legend(loc='upper center', ncol=2)
+    legend(loc='upper left')
     plt.title('Live - Entwicklung, Tag: %i' %day_counter)
     xlabel('Days')
-    ylabel('Part of Population')
+    ylabel('Part of Population [%]')
 
     plt2 = plt.twinx()
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)

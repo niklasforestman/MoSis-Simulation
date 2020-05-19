@@ -240,10 +240,11 @@ if __name__ == "__main__":
             #start = timer()
             for person in population:
                 if 'grids' in globals(): # Grenzen existieren
-                    #Grenzen zeichnen
-                    for i in range(len(grids)):
-                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+                    if person == population[0]:
+                        #Grenzen zeichnen bei erster Person
+                        for i in range(len(grids)):
+                            pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                            pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
 
                     # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
 

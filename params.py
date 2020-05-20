@@ -42,9 +42,9 @@ class Params:
             self.infected = 4 #Standardeinstellung: 2
             self.infection_chance = 86#Standardeinstellung: 60
             self.recovery = 8 #Standardeinstellung:8
-            self.heavy_case = 10#Standardeinstellung: 2
+            self.heavy_case = 1#Standardeinstellung: 2
             self.incubation_time = 40 #Standardeinstellung: 20
-            self.superspreader = 50 #Standardeinstellung: 10
+            self.superspreader = 0 #Standardeinstellung: 10
             self.testrate = 100
         
         else:

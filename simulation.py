@@ -39,6 +39,8 @@ from Fitting import fitting
 from ClickInteraktion import clickPauseEvent
 from multiprocessing import Process, Queue
 import GUI
+from pylab import plot, legend, xlabel, ylabel, plt, ylim
+from drawnow import drawnow, figure
 
 # === FUNKTIONEN ===
 def sim_continue(pop):
@@ -46,6 +48,59 @@ def sim_continue(pop):
     all_dead = all(not people.alive for people in pop)
     all_healed = all(not people.sick and not people.infected for people in pop)
     return not(all_dead or all_healed)
+
+def drawfkt():
+    # Enthält die Befehle für den Live Plot, wird über Animationsfunktion aufgerufen
+    '''
+    # Vorerst entfernt, weil dadurch eigentlich interessanter Verlauf eingeschränkt sichtbar
+    if day_counter > 20:
+        x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+        y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+        line_1, = plot(x,100*y, 'k')
+        line_1.set_label('Alive')
+        ylim(0,1.2)
+        '''
+
+    #Teil für den Fit
+
+    if day_counter > 11:
+        x=days_total
+        y=100*fit2
+        line_1, = plot(x,y, 'b')
+        line_1.set_label('FIT Infected')
+
+        x=days_total
+        y=100*fit1
+        line_1, = plot(x,y, 'y')
+        line_1.set_label('FIT Immune')
+
+    # Erstellen der Datenreihen für Liveplot
+
+    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
+    y=100*people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    line_1, = plot(x,y, '#B5E51D')
+    line_1.set_label('Immune')
+
+    y=100*people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    line_1, = plot(x,y,'#FEAEC9')
+    line_1.set_label('Infected')
+
+    y=100*people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    line_1, = plot(x,y,'#FE0000')
+    line_1.set_label('Deceased')
+    legend(loc='upper left')
+    plt.title('Live Progression, Day: %i' %day_counter)
+    xlabel('Days')
+    ylabel('Part of Population [%]')
+
+    # R-Rate auf sekundärer Achse für separate Skalierung
+    plt2 = plt.twinx()
+    y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
+    line_1, = plt2.plot(x,y)
+    line_1.set_label("$R_0$")
+    plt2.legend(loc='upper right')
+    plt2.set_ylabel('$R_0$')
+
 
 # === INITIALISIERUNG von Paramtern ===
 #Initialisierung der Arrays für die Speicherung der Ergebnisse der einzenen Zeitschritte
@@ -174,6 +229,7 @@ if __name__ == "__main__":
 
     people_infected[0] = params.infected/params.popsize
     start = timer()
+    figure()
     # Creating the Simulation
     while sim_continue(population):
 
@@ -239,19 +295,18 @@ if __name__ == "__main__":
         def process1():
             #start = timer()
             for person in population:
-                if 'grids' in globals(): # Grenzen existieren
-                    if person == population[0]:
-                        #Grenzen zeichnen bei erster Person
-                        for i in range(len(grids)):
-                            pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                            pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+                if 'grids' in globals(): # Grenzen / mehrere Bereiche existieren
+                    #Grenzlinien zeichnen
+                    for i in range(len(grids)):
+                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
 
-                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
-
-                    # Koordinate 1
+                    # seperate Betrachtung der Koordinatenrichtungen, Koordinate 1
+                    # mit bisect wird überprüft, zwischen welchen Grenzen (in welchem Bereich) sich die Person vor
+                    # befindet und nach Bewegung befindet -> Grenzüberschritt bei Veränderung
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
                         if randint(0,100) > params.cross_prob:
                             person.speed[0] = person.speed[0] * -1
                             if person.speed[0] < 0:
@@ -272,7 +327,7 @@ if __name__ == "__main__":
                     # Koordinate 2
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
                         if randint(0,100) > params.cross_prob:
                             person.speed[1] = person.speed[1] * -1
                             if person.speed[1] < 0:
@@ -311,6 +366,7 @@ if __name__ == "__main__":
                     person.grenzevent_y -= 1
 
                 person.ps = person.ps.move(person.speed)
+                # Abfragen, ob Person Bereich des Bildschirms verlässt
                 if person.ps.left < 0 or person.ps.right > width:
                     person.speed[0] = person.speed[0] * -1
                 if person.ps.top < 0 or person.ps.bottom > height:
@@ -324,6 +380,7 @@ if __name__ == "__main__":
 
         def process3():
             #start = timer()
+            # Interaktion zwischen zwei Personen
             for person in population:
                 for friend in population:
                         if person is friend:
@@ -394,11 +451,14 @@ if __name__ == "__main__":
                 r0_current[day_counter] = r0
 
 
+            # Ausgabe des Status über Konsole
             print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-
+            #if day_counter % 10 == 0:
+                #fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
+                #print('test')
 
         process3 = multiprocessing.Process(target=process3())
         GUI_function()
@@ -408,6 +468,9 @@ if __name__ == "__main__":
             start = timer()
             day_counter += 1
             process4 = multiprocessing.Process(target=process4(count,day_counter))
+            if day_counter > 9 and day_counter % 6 == 0:
+                fit1,fit2,days_total = fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
+            drawnow(drawfkt)
             count = 0
 
         process1 = multiprocessing.Process(target=process1())
@@ -416,14 +479,12 @@ if __name__ == "__main__":
         pygame.display.flip()
 
 
-
+# === AUSWERTUNG ===
     if params.result == True:
+        # Aufruf der einzelnen Funktionen zur Auswertung
         statistics(population,params,day_counter)
-        # === AUSWERTUNG ===
         Auswertung_Excel = True
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)
 
-        #fitting(max_days,day_counter,people_immune)
         Plot_interaktiv(people_alive, people_immune, people_infected, people_dead, r0_current)
-

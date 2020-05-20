@@ -62,12 +62,12 @@ def drawfkt():
 
     if day_counter > 11:
         x=days_total
-        y=fit2
+        y=100*fit2
         line_1, = plot(x,y, 'b')
         line_1.set_label('FIT Infected')
 
         x=days_total
-        y=fit1
+        y=100*fit1
         line_1, = plot(x,y, 'y')
         line_1.set_label('FIT Immune')
 

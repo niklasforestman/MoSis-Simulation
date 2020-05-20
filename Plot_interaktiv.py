@@ -17,27 +17,32 @@ def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0
     alive_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
-        name='Alive'
+        name='Alive',
+        line=dict(color='black')
     )
     immune_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
-        name='Immune'
+        name='Immune',
+        line=dict(color='#B5E51D')
     )
     infected_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
-        name='Infected'
+        name='Infected',
+        line=dict(color='#FEAEC9')
     )
     deceased_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
-        name='Deceased'
+        name='Deceased',
+        line=dict(color='#FE0000')
     )
     r0_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
-        name='r0'
+        name='$R_0$',
+        line=dict(color='#1F77B4')
     )
     data = [alive_end, immune_end, infected_end, deceased_end,r0_end]
 

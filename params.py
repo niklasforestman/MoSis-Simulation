@@ -20,7 +20,7 @@ class Params:
         self.isolation_enabled = False #Parameter Definition für die Selbstregulierung
         self.tests_enabled = False
         self.area_grid =1  # Anzahl voneinander abgegerenzter Bereiche pro Achse (-> Anzahl Bereiche entspricht Quadrat der Zahl)
-        self.cross_prob = 10 # Wahrscheinlichkeit eine Grenze bei Erreichen zu Überqueren in Prozent
+        self.cross_prob = 10 # Wahrscheinlichkeit in Prozent eine Grenze bei Erreichen zu Überqueren
         self.event_isolation_population = 70  # Isolierte Bevölkerung nach Isolationsaufruf; Wert zwischen 0 und 100
         self.event_isolation_active = False  # Status des Isolationsaufrufes
         self.event_vaccination_rate = 70

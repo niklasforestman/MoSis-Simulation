@@ -13,7 +13,9 @@ Vorgehen:
 '''
 
 def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0_current):
+    # Funktion ist rechenaufwändig, wird nur zum Ende einmal aufgerufen
 
+    #Erstellen der Datenpunkte für den Plot als Scatter
     alive_end = go.Scatter(
         x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
         y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1],
@@ -44,8 +46,9 @@ def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0
         name='$R_0$',
         line=dict(color='#1F77B4')
     )
-    data = [alive_end, immune_end, infected_end, deceased_end,r0_end]
+    data = [alive_end, immune_end, infected_end, deceased_end,r0_end] #alle Datensätze werden zusammengefasst
 
+    #Formatierung des Plots
     layout = go.Layout(
         title=go.layout.Title(
             text='Result'
@@ -64,5 +67,6 @@ def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0
         )
     )
 
+    #Erstellen und Plotten des Figures
     fig = go.Figure(data=data, layout=layout)
     iplot(fig)

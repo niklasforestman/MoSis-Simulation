@@ -1,3 +1,6 @@
+#Versuch, den Liveplot aus dem Hauptskript auszulagern, hat mit der Variablenübergabe nicht funktioniert
+#Eventuell, wenn Variablen als Globals eingelesen werden, sonst bleibt der Teil im Hauptskript
+
 from pylab import *
 from drawnow import drawnow, figure
 import numpy as np

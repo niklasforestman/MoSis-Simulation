@@ -1,20 +1,5 @@
-'''import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from matplotlib import style
-import numpy as np
-
-def Live_Plot(people_alive, people_immune, people_infected, people_dead, fig, ax1):
-    x = np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1),
-    y = people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-    ani = animation.FuncAnimation(fig, animate, x, y, ax1)
-    plt.show()
-
-def animate((x, y, ax1)):
-    ax1.clear()
-    ax1.plot(x, y)
-
-'''
-
+# ACHTUNG!!!
+# Reine Testfunktion, hat keine Auswirkung auf das Programm!
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation

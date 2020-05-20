@@ -50,6 +50,7 @@ def sim_continue(pop):
     return not(all_dead or all_healed)
 
 def drawfkt():
+    # Enthält die Befehle für den Live Plot, wird über Animationsfunktion aufgerufen
     '''
     # Vorerst entfernt, weil dadurch eigentlich interessanter Verlauf eingeschränkt sichtbar
     if day_counter > 20:
@@ -59,6 +60,8 @@ def drawfkt():
         line_1.set_label('Alive')
         ylim(0,1.2)
         '''
+
+    #Teil für den Fit
 
     if day_counter > 11:
         x=days_total
@@ -71,28 +74,27 @@ def drawfkt():
         line_1, = plot(x,y, 'y')
         line_1.set_label('FIT Immune')
 
+    # Erstellen der Datenreihen für Liveplot
 
     x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=100*people_immune[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y, '#B5E51D')
     line_1.set_label('Immune')
 
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=100*people_infected[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y,'#FEAEC9')
     line_1.set_label('Infected')
 
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=100*people_dead[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plot(x,y,'#FE0000')
     line_1.set_label('Deceased')
     legend(loc='upper left')
-    plt.title('Live - Entwicklung, Tag: %i' %day_counter)
+    plt.title('Live Progression, Day: %i' %day_counter)
     xlabel('Days')
     ylabel('Part of Population [%]')
 
+    # R-Rate auf sekundärer Achse für separate Skalierung
     plt2 = plt.twinx()
-    x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
     y=r0_current[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
     line_1, = plt2.plot(x,y)
     line_1.set_label("$R_0$")
@@ -293,18 +295,18 @@ if __name__ == "__main__":
         def process1():
             #start = timer()
             for person in population:
-                if 'grids' in globals(): # Grenzen existieren
-                    #Grenzen zeichnen
+                if 'grids' in globals(): # Grenzen / mehrere Bereiche existieren
+                    #Grenzlinien zeichnen
                     for i in range(len(grids)):
                         pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
                         pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
 
-                    # Grenzen funktionieren, aber Probleme mit Figuren, die in Grenznähe bleiben, wenn stochastische Bewegung sie über Grenze führen würde, aber Wahrscheinlichkeit nicht erreicht wird
-
-                    # Koordinate 1
+                    # seperate Betrachtung der Koordinatenrichtungen, Koordinate 1
+                    # mit bisect wird überprüft, zwischen welchen Grenzen (in welchem Bereich) sich die Person vor
+                    # befindet und nach Bewegung befindet -> Grenzüberschritt bei Veränderung
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
-                        # Person überschreitet Grenze bei Vorwärtsbewegeung, aber nicht bei Rückwärtsbewegung
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
                         if randint(0,100) > params.cross_prob:
                             person.speed[0] = person.speed[0] * -1
                     elif (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
@@ -316,7 +318,7 @@ if __name__ == "__main__":
                     # Koordinate 2
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
-                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Rückwärtsbewegung
+                        # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
                         if randint(0,100) > params.cross_prob:
                             person.speed[1] = person.speed[1] * -1
                     elif (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
@@ -332,6 +334,7 @@ if __name__ == "__main__":
             #start = timer()
             for person in population:
                 person.ps = person.ps.move(person.speed)
+                # Abfragen, ob Person Bereich des Bildschirms verlässt
                 if person.ps.left < 0 or person.ps.right > width:
                     person.speed[0] = person.speed[0] * -1
                 if person.ps.top < 0 or person.ps.bottom > height:
@@ -345,6 +348,7 @@ if __name__ == "__main__":
 
         def process3():
             #start = timer()
+            # Interaktion zwischen zwei Personen
             for person in population:
                 for friend in population:
                         if person is friend:
@@ -415,6 +419,7 @@ if __name__ == "__main__":
                 r0_current[day_counter] = r0
 
 
+            # Ausgabe des Status über Konsole
             print("Tag: ",day_counter,".....","Isolationsaufruf: ",params.isolation_enabled,".....","r0: ", \
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
@@ -442,10 +447,10 @@ if __name__ == "__main__":
         pygame.display.flip()
 
 
-
+# === AUSWERTUNG ===
     if params.result == True:
+        # Aufruf der einzelnen Funktionen zur Auswertung
         statistics(population,params,day_counter)
-        # === AUSWERTUNG ===
         Auswertung_Excel = True
         if Auswertung_Excel:
             Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, people_dead)

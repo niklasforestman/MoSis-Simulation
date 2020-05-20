@@ -50,7 +50,7 @@ def sim_continue(pop):
     return not(all_dead or all_healed)
 
 def drawfkt():
-    # Enthält die Befehle für den Live Plot, wird über Animationsfunktion aufgerufen
+    # Enthält die Befehle für den Liveplot, wird über Animationsfunktion aufgerufen
     '''
     # Vorerst entfernt, weil dadurch eigentlich interessanter Verlauf eingeschränkt sichtbar
     if day_counter > 20:
@@ -66,12 +66,12 @@ def drawfkt():
     if day_counter > 11:
         x=days_total
         y=100*fit2
-        line_1, = plot(x,y, 'b')
+        line_1, = plot(x,y, color='grey', ls = '--')
         line_1.set_label('FIT Infected')
 
         x=days_total
         y=100*fit1
-        line_1, = plot(x,y, 'y')
+        line_1, = plot(x,y, color='grey', ls =  '-.')
         line_1.set_label('FIT Immune')
 
     # Erstellen der Datenreihen für Liveplot
@@ -229,7 +229,7 @@ if __name__ == "__main__":
 
     people_infected[0] = params.infected/params.popsize
     start = timer()
-    figure()
+    figure() #erstellt das Figure aus der drawnow-Bibliothek für Liveplot
     # Creating the Simulation
     while sim_continue(population):
 
@@ -296,10 +296,11 @@ if __name__ == "__main__":
             #start = timer()
             for person in population:
                 if 'grids' in globals(): # Grenzen / mehrere Bereiche existieren
-                    #Grenzlinien zeichnen
-                    for i in range(len(grids)):
-                        pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
-                        pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
+                    if person == population[0]:
+                        #Grenzlinien zeichnen bei erster Person
+                        for i in range(len(grids)):
+                            pygame.draw.line(screen, (0,0,0),(0,grids[i]), (width,grids[i]))
+                            pygame.draw.line(screen, (0,0,0),(grids[i],0), (grids[i], height))
 
                     # seperate Betrachtung der Koordinatenrichtungen, Koordinate 1
                     # mit bisect wird überprüft, zwischen welchen Grenzen (in welchem Bereich) sich die Person vor
@@ -308,7 +309,10 @@ if __name__ == "__main__":
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
                         # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
                         if randint(0,100) > params.cross_prob:
+                            #Grenzübertritt findet nicht statt
                             person.speed[0] = person.speed[0] * -1
+
+                            # Attribut wird auf Penalty-Wert aus Params gesetzt, Vorzeichen orientiert sich an Bewegungsrichtung
                             if person.speed[0] < 0:
                                 person.grenzevent_x = -params.grenze_penalty
                             else:
@@ -324,7 +328,7 @@ if __name__ == "__main__":
                                 person.grenzevent_x = params.grenze_penalty
                             person.speed[0] = 0
 
-                    # Koordinate 2
+                    # Koordinate 2, genauere Beschreibung in Koordinate 1, Prinzip ist das gleiche
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
                         # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
@@ -352,12 +356,15 @@ if __name__ == "__main__":
             for person in population:
                 #Die beiden ifs sollen Personen daran hindern, an der Grenze kleben zu bleiben
                 if person.grenzevent_x < 0:
-                    person.speed[0] = randint(-4,0)*params.up
-                    person.grenzevent_x += 1
+                    # versuchter Grenzübertritt innerhalb der letzten Schritte
+                    person.speed[0] = randint(-4,0)*params.up #Bewegung von Grenze weg wird erzwungen
+                    person.grenzevent_x += 1 #Attribut geht wieder Richtung 0
                 elif person.grenzevent_x > 0:
+                    # gleiches Prinzip, andere Bewegungsrichtung
                     person.speed[0] = randint(0,4)*params.up
                     person.grenzevent_x -= 1
 
+                # gleiches Prinzip für zweite Koordinatenrichtung
                 if person.grenzevent_y < 0:
                     person.speed[1] = randint(-4,0)*params.up
                     person.grenzevent_y += 1

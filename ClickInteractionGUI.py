@@ -53,6 +53,7 @@ class myApplication(QtWidgets.QWidget):
 
     def werteEintragen(self):
         print(self.derAuserwaelhte.immune)
+        print(self.derAuserwaelhte.isolated)
         if self.AuswahlLeben.currentText() == 'Leben':
             self.derAuserwaelhte.alive = True
             self.derAuserwaelhte.dead = False
@@ -92,6 +93,8 @@ class myApplication(QtWidgets.QWidget):
 
 
         print(self.derAuserwaelhte.immune )
+        print(self.derAuserwaelhte.isolated)
+
 
 
     def guiInteractionSetup(self):

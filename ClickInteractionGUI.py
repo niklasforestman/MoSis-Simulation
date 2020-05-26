@@ -20,7 +20,7 @@ class guiErstellen():
 
         interactionGUI.show()
         ret = app.exec_()
-        sys.exit(ret)
+
 
 
 class myApplication(QtWidgets.QWidget):

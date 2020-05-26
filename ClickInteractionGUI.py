@@ -1,18 +1,15 @@
 
-from PyQt5.QtWidgets import QApplication, QLineEdit, QLabel, QWidget, QPushButton, QVBoxLayout , QHBoxLayout
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 
 #GUI - Bibliotheken
-from PyQt5 import QtWidgets, QtCore #QLineEdit #QLineEdit
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QAction, QTabWidget,QVBoxLayout
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import pyqtSlot
+from PyQt5 import QtWidgets
+
 import sys #Wird zum Schließen des Programms benötigt
 
 import person
 
+#Das hier ist Eine Klasse, in der die GUI mittels einer App gestartet wird
+#Als Input wird immer die angeklickte Person durchgereicht
+#Wozu genau was da ist weiß ich nicht - aber es funktioniert so :)
 class guiErstellen():
     def __init__(self, Proband):
         app = QtWidgets.QApplication([])
@@ -22,38 +19,33 @@ class guiErstellen():
         ret = app.exec_()
 
 
-
+#In dieser Klasse wird die GUI erstellt
+#Die Klasse erbt von QtWisgets
 class myApplication(QtWidgets.QWidget):
     def __init__(self, person):
+        #mit super().__init__() wird die init von QtWidget aufgerufen und auch die von allen anderen Klassen von denen geerbt wird
         super().__init__()
+        #hier wird einmal eine Person für diese Klasse festgelegt, damit wir die verschiedenen Variablen der ausgewählten Person ändern können
         self.derAuserwaelhte = person
 
-        '''
-        self.windowXPos = 320
-        self.windowYPos = 150
-
-        self.appWidth = 400
-        self.appHeight = 600
-
-        self.window = QWidget()
-        self.window.setWindowTitle('PyQt5 App')
-        #self.window.setGeometry(self.windowXPos, self.windowYPos, self.appHeight, self.appWidth)
-
-
-        self.window.setLayout(self.layout)
-        '''
         self.guiInteractionSetup()
 
-        #self.reInit()
 
-    def reInit(self):
+        '''
+        def reInit(self):
 
         self.layout = QtWidgets.QVBoxLayout()
         self.window.setLayout(self.layout)
+        '''
 
+#hier wird abhängig von den eingaben ain der GUI der jeweilige Wert der Parameter der Person geändert
     def werteEintragen(self):
+
+        #kurze Statusausgabe
         print(self.derAuserwaelhte.immune)
         print(self.derAuserwaelhte.isolated)
+
+        #mit currentText() kann der Text einer Combobox ausgelesen werden
         if self.AuswahlLeben.currentText() == 'Leben':
             self.derAuserwaelhte.alive = True
             self.derAuserwaelhte.dead = False
@@ -91,15 +83,20 @@ class myApplication(QtWidgets.QWidget):
         else:
             self.derAuserwaelhte.superspread = False
 
-
+        #statusausgabe
         print(self.derAuserwaelhte.immune )
         print(self.derAuserwaelhte.isolated)
 
 
 
     def guiInteractionSetup(self):
+        #es wird ein layout vom Typ QVBoxlayout erstellt
         self.layout = QtWidgets.QVBoxLayout()
+        #dem Layout unserer GUI wird das erstellte Layout zugewiesen
         self.setLayout(self.layout)
+
+
+        #es werden die einzelnen Elemente der GUI erstellt
 
         self.schroedingersLabel = QtWidgets.QLabel(self)
         self.schroedingersLabel.setText('Zustand 1')
@@ -143,7 +140,8 @@ class myApplication(QtWidgets.QWidget):
 
 
 
-
+        #es werden die einzelnen Elemente dem Layout hinzugefügt
+        #dabei legt die Reihenfolge des Hinzufügens auch die Reihenfolge in der GUI fest
 
         self.layout.addWidget(self.schroedingersLabel)
         self.layout.addWidget(self.AuswahlLeben)
@@ -168,6 +166,7 @@ class myApplication(QtWidgets.QWidget):
 
         self.layout.addWidget(self.button1)
 
+        #dem layout wird erneut das selbst erstellte layout zugewiesen
         self.setLayout(self.layout)
 
 
@@ -176,8 +175,10 @@ class myApplication(QtWidgets.QWidget):
 
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': #diese Zeile bedeutet, dass der folgende Code nur ausgeführt wird, wenn auch dieses Programm ausgeführt wird. Wird dieses Programm in einem anderen aufgerufen, wird der folgende Code nicht ausgeführt
 
+
+    #Code zum Testen der GUI -> für das eigentliche Programm nicht wichtig
     Proband = person.Person(False, False, False, False, False, False )
 
     app = QtWidgets.QApplication([])
@@ -186,54 +187,5 @@ if __name__ == '__main__':
     interactionGUI.show()
     ret = app.exec_()
     sys.exit(ret)
-'''
-    def makeCenterLabel(self,title,layout, type):
-        self.helloMsg = QLabel(title, parent=self.window)
-
-        if type == 'bold':
-            self.myFont= QFont()
-            self.myFont.setBold(True)
-        else:
-            self.myFont = QFont()
-
-        self.helloMsg.setFont(self.myFont)
-        self.helloMsg.setAlignment(Qt.AlignCenter)
-        layout.addWidget(self.helloMsg)
-        #self.window.show()
-
-    def makeLeftLabel(self,title,layout,type):
-        self.helloMsg = QLabel(title, parent=self.window)
-
-        if type == 'bold':
-            self.myFont= QFont()
-            self.myFont.setBold(True)
-        else:
-            self.myFont = QFont()
-
-        self.helloMsg.setFont(self.myFont)
-        self.helloMsg.setAlignment(Qt.AlignLeft)
-        layout.addWidget(self.helloMsg)
-        #self.window.show()
 
 
-    def createBushButton(self, title, action,layout):
-        self.button = QPushButton(title, parent=self.window)
-        layout.addWidget(self.button)
-        self.button.clicked.connect(action)    #verbindet das Signal 'button.clicked' mit einem Slot in den ''
-        #self.button.show()
-
-    def createLineEdit(self, data, layout):
-        self.lineEdit = QLineEdit(str(data), parent=self.window)
-        layout.addWidget(self.lineEdit)
-        self.lineEdit.setText(str(data))
-        #self.lineEdit.show()
-
-    def createLabeledLineEdit(self,label, data, layout):
-        self.labeledLineEdit = QHBoxLayout()
-        self.makeLabel(label, self.labeledLineEdit, 'normal')
-        self.createLineEdit(data, self.labeledLineEdit)
-        layout.addLayout(self.labeledLineEdit)
-
-    def printSomething(self):
-        print('I printed something')
-'''

@@ -292,7 +292,7 @@ if __name__ == "__main__":
                     people.isolated = False
 
         screen.fill(white)
-        def process1():
+        def process1(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
             #start = timer()
             for person in population:
                 if 'grids' in globals(): # Grenzen / mehrere Bereiche existieren
@@ -351,7 +351,7 @@ if __name__ == "__main__":
             #end = timer()
             #print("Prozess 1",end-start)
 
-        def process2():
+        def process2(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
             #start = timer()
             for person in population:
                 #Die beiden ifs sollen Personen daran hindern, an der Grenze kleben zu bleiben
@@ -385,7 +385,7 @@ if __name__ == "__main__":
             #end = timer()
             #print("Prozess 2 New Step",end-start)
 
-        def process3():
+        def process3(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
             #start = timer()
             # Interaktion zwischen zwei Personen
             for person in population:
@@ -398,7 +398,7 @@ if __name__ == "__main__":
             #end = timer()
             #print("Prozess 3 contact",end-start)
 
-        def process4(count,day_counter):
+        def process4(count,day_counter): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
 
 
             #Hilfsvariablen für die Berechnung
@@ -467,21 +467,21 @@ if __name__ == "__main__":
                 #fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
                 #print('test')
 
-        process3 = multiprocessing.Process(target=process3())
+        process3 = multiprocessing.Process(target=process3())#Ausführen des Prozesses mittels Multiprocessing
         GUI_function()
         if count==12:
-            end = timer()
-            print("Laufzeit",end-start)
-            start = timer()
+            end = timer()#Timer enden
+            print("Laufzeit",end-start)#Wert des Timers ausgeben
+            start = timer()# Timer starten
             day_counter += 1
-            process4 = multiprocessing.Process(target=process4(count,day_counter))
+            process4 = multiprocessing.Process(target=process4(count,day_counter))#Ausführen des Prozesses mittels Multiprocessing
             if day_counter > 9 and day_counter % 6 == 0:
-                fit1,fit2,days_total = fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
+                fit1,fit2,days_total = fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)#Alle 6 Tage wird Fitting aufgerufen und eine neue Vorhersage wird erstellt.
             drawnow(drawfkt)
             count = 0
 
-        process1 = multiprocessing.Process(target=process1())
-        process2 = multiprocessing.Process(target=process2())
+        process1 = multiprocessing.Process(target=process1())#Ausführen des Prozesses mittels Multiprocessing
+        process2 = multiprocessing.Process(target=process2())#Ausführen des Prozesses mittels Multiprocessing
 
         pygame.display.flip()
 

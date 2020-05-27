@@ -64,9 +64,8 @@ r0_current_superspreader = np.zeros(max_days)
 
 # === Init Parameter
 params = Params()
-ini_start()
-para = new_parameter()
-print(para.testrate)
+ini_start() # opens initialise GUI
+params = new_parameter()
 
 # === Init pygame ===
 pygame.init()
@@ -84,17 +83,17 @@ if params.area_grid > 1: #Grenzen erstellen
 
 
 def GUI_function():
-        button_event = 'none'
-        if not gui_queue.empty():  # GUI übermittelt Daten in Form von Strings
-            button_event = gui_queue.get()
+        button_event = 'none'   # clears variable for next round
+        if not gui_queue.empty():  #makes sure that something was sent
+            button_event = gui_queue.get() #UI transfers data in form of a string
 
         if (button_event == 'isolation_up'):
             params.event_isolation_population = params.event_isolation_population + 5
 
-            if params.event_isolation_active:
+            if params.event_isolation_active:  #takes over new parameter while isolation is active
                 for people in population:
                     if not people.heavy and people.alive:
-                        people.isolated = False
+                        people.isolated = False # reset isolation parameter cause otherwise the effect would sum up
                         if (randint(0, 100) <= params.event_isolation_population):
                             people.isolated = True
 
@@ -156,8 +155,8 @@ if __name__ == "__main__":
     population = []
 
     #Aufbau GUI
-    gui_queue = Queue()  #Weg zur Kommunikation zwischen beiden Prozessen
-    gui_process = Process(target= GUI.gui, args = (gui_queue,))
+    gui_queue = Queue()  #the communication channel between GUI and main process
+    gui_process = Process(target= GUI.gui, args = (gui_queue,))  # starts GUI process
     gui_process.start()
 
     # Aufbauen der Population

@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QLineEdit
@@ -22,9 +23,18 @@ class GUI(QMainWindow):
         self.setGeometry(1200,500, 150,150)   # setGeometry( x, y, width, height)
         #Layout and QWidget creation
         self.generalLayout = QVBoxLayout()
+        self.layout = QGridLayout()
+        self.setLayout(self.layout)
+        self.tabwidget = QTabWidget(self)
+
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
+        label1 = QLabel("Widget in Tab 1.")
+        label2 = QLabel("Widget in Tab 2.")
+        self.tabwidget.addTab(label1, "Tab 1")
+        self.tabwidget.addTab(label2, "Tab 2")
+        self.layout.addWidget(self.tabwidget, 0, 0)
         #initialise parameters
         self.event_isolation_population = params.event_isolation_population
         self.event_isolation_active = params.event_isolation_active

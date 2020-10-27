@@ -2,7 +2,7 @@
 
 """
 Program: Coronavirus Simulation
-Origin Author: Nathan Verghis
+Origin Author: Nathan Verghis, github.com/nathan-verghis
 
 New Program Name
 Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)

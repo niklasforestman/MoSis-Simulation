@@ -1,6 +1,11 @@
 import pygame
 from pygame.locals import *
 
+# Thins document is to enable the clickinteraction with single indivuduals of the Population.
+#       if you press "p" you pause the simulation nd enter into the GODMODE where you canindividually
+#       alter the atributes of individual people ou selected.
+#       An individual can be selected by clicking on it. That will give you back an instrcution
+#       in the console on how to alter a persons atributes.
 
 
 def clickPauseEvent(event, population):
@@ -22,7 +27,7 @@ def godMode(population):
     statusGodmode = True
     while statusGodmode:
         for event in pygame.event.get():
-            if event.type == KEYDOWN and event.key == K_z:
+            if event.type == KEYDOWN and event.key == K_z:  #   if z is pressed  you can exit the GODMODE and get an according message
                 statusGodmode = False
                 print("++++++++++++++++++++++++++++++")
                 print(" You are no power here!")
@@ -36,7 +41,8 @@ def godMode(population):
                 print(event.pos) #Gibt die Position relaitv zur oberen linken Ecke des Fensters aus
                 wululululu(event.pos, population)
 
-def anleitungAuswahl(person):
+def anleitungAuswahl(person):   # This is the function that prints instructions in the console on how to alter
+                                #       a persons attributes
     print("Very well. Wich parameter would you like to change ?")
     print("++++++++++++++++++++++++++++++")
     print("press [a] for alive.         The alive statuts is currenly", person.alive)
@@ -53,20 +59,23 @@ def anleitungAuswahl(person):
     print("++++++++++++++++++++++++++++++")
 
 
-def pickAStatusAlready(person):
+def pickAStatusAlready(person):     # This function is the functionality that enables someone in
+                                    #       GODMODE to change an individuals attributes inside the simulation
 
     #Attribute einer Prson: ['alive','immune', 'isolated', 'infected', 'sick', 'heavy', 'dead', 'superspread']
 
     print("++++++++++++++++++++++++++++++")
     print("AHHHHH I SEE YOU WANNE BE A GOD")
     print("")
-    anleitungAuswahl(person)
+    anleitungAuswahl(person)        # Prints the instrucitons inside the console
 
     myBreakCondition = True
 
     while myBreakCondition:
 
-        for event in pygame.event.get():
+        for event in pygame.event.get():    #   loop that checks all the different possibilitys
+                                            #       the attributes can changed with keypresses
+                                            #       according to the instructions printed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     person.alive = not person.alive
@@ -131,7 +140,8 @@ def pickAStatusAlready(person):
                     myBreakCondition = False
 
 
-def wululululu(pos, population):
+def wululululu(pos, population):    # This function allows that a person from the population can
+                                    #       be selected via a mouse click.
     print("X = ", pos[0])
     print("y = ", pos[1])
     aoe = 2

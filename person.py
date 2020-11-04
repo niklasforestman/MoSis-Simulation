@@ -67,7 +67,7 @@ class Person:
             #if superspread:
             #    self.image = pygame.image.load("yellow box 2.jpg")
             else:
-                self.image = pygame.image.load("black box.jpg")
+                self.image = pygame.image.load("black_box.jpg")
             self.ps = self.image.get_rect()
             k=int(params.scale/10)
             self.left = randint(1, k)
@@ -89,7 +89,7 @@ class Person:
                 self.speed = [params.up*randint(-100, 100) * 0.05,params.up*randint(-100, 100) * 0.05]
             else:
                 self.speed = [params.up*randint(-100, 100) * 0.025,params.up*randint(-100, 100) * 0.025]
-            self.image = pygame.image.load("black box.jpg")
+            self.image = pygame.image.load("black_box.jpg")
             self.ps = self.image.get_rect()
             k=int(params.scale/10)
             self.left = randint(1, k)

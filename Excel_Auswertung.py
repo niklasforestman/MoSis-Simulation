@@ -23,8 +23,6 @@ def Excel_Auswertung (r0_current,people_infected, darkfigure, people_immune, peo
     worksheet.write(0,col+4,'Aktuell Immune')
     worksheet.write(0,col+5,'Aktuell Verstorbene')
 
-
-
     #Schreiben in die Excel
 
     for r0 in (r0_current):

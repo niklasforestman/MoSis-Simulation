@@ -16,7 +16,7 @@ from params import Params
 params = Params()   #needed for inital values of event parameters
 
 class GUI(QMainWindow):
-    def __init__(self,queue):   #queue ist the communication channel between main and GUI process
+    def __init__(self,queue):   #queue is the communication channel between main and GUI process
         super().__init__()
         self.setWindowTitle('population control')
         self.setGeometry(1200,500, 150,150)   # setGeometry( x, y, width, height)

@@ -4,7 +4,7 @@
 Program: Coronavirus Simulation
 Origin Author: Nathan Verghis, github.com/nathan-verghis
 
-New Program Name
+MoSi Coronavirus Simulation
 Authors: KT MoSi (Albrecht Pohl, Niklas Waldmann)
 
 
@@ -53,16 +53,6 @@ def sim_continue(pop):
 
 def drawfkt():
     # Enthält die Befehle für den Liveplot, wird über Animationsfunktion aufgerufen
-    '''
-    # Vorerst entfernt, weil dadurch eigentlich interessanter Verlauf eingeschränkt sichtbar
-    if day_counter > 20:
-        x=np.arange(np.nonzero(people_alive)[0][0], np.nonzero(people_alive)[0][-1]+1)
-        y=people_alive[np.nonzero(people_alive)[0][0]:np.nonzero(people_alive)[0][-1]+1]
-        line_1, = plot(x,100*y, 'k')
-        line_1.set_label('Alive')
-        ylim(0,1.2)
-        '''
-
     #Teil für den Fit
 
     if day_counter > 11:
@@ -241,9 +231,7 @@ if __name__ == "__main__":
 
         count += 1
 
-        #Abfrage der GUI und auslösen von Events
-
-
+        #Abfrage der GUI und auslösen von Events 
 
         #params.isolation ist während des Programms über die Pfeiltasten rechts und links steuerbar.
         for event in pygame.event.get():
@@ -260,7 +248,7 @@ if __name__ == "__main__":
                     if not people.heavy or people.alive:
                         people.isolated = False
                         params.isolation_enabled = False
-                        #events_enabled = False #Stellt eigenständige Events aus
+
          #Impfstoff sofort für alle Kranken verfügbar
             elif (event.type == KEYDOWN and event.key == K_UP):
                 for people in population:
@@ -269,14 +257,6 @@ if __name__ == "__main__":
                         people.infected = False
                         people.immune = True
                         people.image = pygame.image.load("green square 2.jpg")
-
-        '''if day_counter == max_days-1:
-                for people in population:
-                   if people.sick or people.infected:
-                        people.sick = False
-                        people.infected = False
-                        people.immune = True
-                        people.image = pygame.image.load("green square 2.jpg")'''
 
 
         if params.events_enabled == 1:
@@ -298,7 +278,7 @@ if __name__ == "__main__":
                     people.isolated = False
 
         screen.fill(white)
-        def process1(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
+        def process1():  #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen. 
             #start = timer()
             for person in population:
                 if 'grids' in globals(): # Grenzen / mehrere Bereiche existieren
@@ -310,7 +290,8 @@ if __name__ == "__main__":
 
                     # seperate Betrachtung der Koordinatenrichtungen, Koordinate 1
                     # mit bisect wird überprüft, zwischen welchen Grenzen (in welchem Bereich) sich die Person vor
-                    # befindet und nach Bewegung befindet -> Grenzüberschritt bei Veränderung
+                    # befindet und nach Bewegung befindet -> Grenzüberschritt bei Veränderung 
+
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[0]) != bisect.bisect_left(grids, person.ps[0])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[0]*-1) == bisect.bisect_left(grids, person.ps[0])):
                         # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
@@ -334,7 +315,9 @@ if __name__ == "__main__":
                                 person.grenzevent_x = params.grenze_penalty
                             person.speed[0] = 0
 
-                    # Koordinate 2, genauere Beschreibung in Koordinate 1, Prinzip ist das gleiche
+                    # Koordinate 2, genauere Beschreibung in Koordinate 1, Prinzip ist das gleiche 
+
+
                     if (bisect.bisect_left(grids, person.ps.move(person.speed)[1]) != bisect.bisect_left(grids, person.ps[1])) \
                         & (bisect.bisect_left(grids, person.ps.move(person.speed)[1]*-1) == bisect.bisect_left(grids, person.ps[1])):
                         # Person überschreitet Grenze bei Bewegeung, aber nicht bei Bewegung in die Gegenrichtung
@@ -354,11 +337,9 @@ if __name__ == "__main__":
                                 person.grenzevent_y = params.grenze_penalty
                             person.speed[1] = 0
 
-            #end = timer()
-            #print("Prozess 1",end-start)
 
-        def process2(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
-            #start = timer()
+
+        def process2():  #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen. 
             for person in population:
                 #Die beiden ifs sollen Personen daran hindern, an der Grenze kleben zu bleiben
                 if person.grenzevent_x < 0:
@@ -388,11 +369,9 @@ if __name__ == "__main__":
                 if count == 0:
                     person.new_step()
                 screen.blit(person.image, person.ps)
-            #end = timer()
-            #print("Prozess 2 New Step",end-start)
+
 
         def process3(): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
-            #start = timer()
             # Interaktion zwischen zwei Personen
             for person in population:
                 for friend in population:
@@ -401,8 +380,7 @@ if __name__ == "__main__":
                         else:
                             if person.infected or person.sick or person.heavy:
                                     person.contact(friend)
-            #end = timer()
-            #print("Prozess 3 contact",end-start)
+
 
         def process4(count,day_counter): #Erstellen eines Prozesses, um später eine parallele Bearbeitung zu ermöglichen.
 
@@ -469,9 +447,8 @@ if __name__ == "__main__":
                   round(r0_current[day_counter],4),".....","aktuell Infizierte: ", round(people_infected[day_counter],4), \
                   ".....","Dunkelziffer: ",round(darkfigure[day_counter],3),".....","aktuell Immune: ", \
                   round(people_immune[day_counter],4),".....","aktuell Verstorbene: ",round(people_dead[day_counter],4))
-            #if day_counter % 10 == 0:
-                #fitting(params.infected/params.popsize, max_days,day_counter,people_immune,people_infected)
-                #print('test')
+
+
 
         process3 = multiprocessing.Process(target=process3())#Ausführen des Prozesses mittels Multiprocessing
         GUI_function()

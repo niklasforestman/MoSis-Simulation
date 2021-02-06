@@ -25,7 +25,6 @@ class Person_Statistics:
 
 
 
-
 class Person:
     """Beschreibt eine einzelne Person in der Simulation. Die Person hat verschiedene Attribute, welche unten aufgefhrt sind. Eine Person kann über die
     Funktion Contact mit anderen Personen interagieren"""
@@ -181,100 +180,4 @@ class Person:
                             other.image = pygame.image.load("rosa box.jpg")
 
 
-    '''def contact(self, other): #Laufzeit: ca 4,5 Sekunden
-        """ Dies ist eine Funktion, welche den Kontakt zweier Personen beschreibt und die Ansteckungsgefahr simuliert"""
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive:
-
-            self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
-            other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
-
-            if self.sick and not other.sick:
-                if params.infection_chance > randint(0,100):
-                    self.counter +=1 # Zählt die angesteckten Personen durch die Person selbst.
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested): #Personen, welche durch Infizierte angesteckt werden, werden wie bereits geteste behandelt
-                        other.image = pygame.image.load("rosa box.jpg")
-
-            elif not self.sick and other.sick:
-                if params.infection_chance >  randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")
-
-            if self.infected and not other.sick:
-                if params.infection_chance > randint(0,100):
-                    self.counter +=1
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested):
-                        other.image = pygame.image.load("rosa box.jpg")
-            elif not self.sick and other.infected:
-                if params.infection_chance >  randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")'''
-
-
-
-
-    '''def contact(self, other): #Laufzeit --> ca 8-10 Sekunden
-        """ Dies ist eine Funktion, welche den Kontakt zweier Personen beschreibt und die Ansteckungsgefahr simuliert"""
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and not self.isolated and not other.isolated and self.alive and other.alive:
-
-            self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
-            other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
-
-            if self.sick and not other.sick:
-                if params.infection_chance > randint(0,100):
-                    self.counter +=1 # Zählt die angesteckten Personen durch die Person selbst.
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested): #Personen, welche durch Infizierte angesteckt werden, werden wie bereits geteste behandelt
-                        other.image = pygame.image.load("rosa box.jpg")
-
-            elif not self.sick and other.sick:
-                if params.infection_chance >  randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")
-
-            if self.infected and not other.sick:
-                if params.infection_chance > randint(0,100):
-                    self.counter +=1
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested):
-                        other.image = pygame.image.load("rosa box.jpg")
-            elif not self.sick and other.infected:
-                if params.infection_chance >  randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")
-
-
-        if self.ps.colliderect(other.ps) and not self.immune and not other.immune and self.alive and other.alive:
-
-            self.speed[0], self.speed[1] = self.speed[0] * -1, self.speed[1] * -1
-            other.speed[0], other.speed[1] = other.speed[0] * -1, other.speed[1] * -1
-
-            if self.sick and not other.sick:
-                if params.infection_chance/2 > randint(0,100):
-                    self.counter +=1
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested):
-                        other.image = pygame.image.load("rosa box.jpg")
-            elif not self.sick and other.sick:
-                if params.infection_chance/2 > randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")
-
-            if self.infected and not other.sick:
-                if params.infection_chance/2 > randint(0,100):
-                    self.counter +=1
-                    other.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and self.tested):
-                        other.image = pygame.image.load("rosa box.jpg")
-            elif not self.sick and other.infected:
-                if params.infection_chance/2 >  randint(0,100):
-                    self.infected = True
-                    if not params.tests_enabled or (params.tests_enabled and other.tested):
-                        self.image = pygame.image.load("rosa box.jpg")'''
 

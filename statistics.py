@@ -37,5 +37,3 @@ def statistics(pop,params,day_counter):
     print("Dead: ", dead)
     print("Immune: ",immune)
 
-
-    #return alive, dead, immune, params.end_dist

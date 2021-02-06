@@ -2,18 +2,8 @@ import plotly.graph_objs as go
 import numpy as np
 from plotly.offline import iplot
 
-'''
-Plot Funktion kann jetzt flexibler mit Input arbeiten
-Vorgehen:
--   Inputs werden auf 0 überprüft (Arrays sind ursprünglich leer und werden im Programm
-    teils vollgeschrieben) - Anteile, die 0 enthalten werden entfernt
--   Angepasste Arrays von den vier Kategorien werden gebildet
--   die vier angepassten Arrays bilden die Datengrundlage für den Plot
--   Plot wird erstellt
-'''
 
 def Plot_interaktiv(people_alive, people_immune, people_infected, people_dead,r0_current):
-    # Funktion ist rechenaufwändig, wird nur zum Ende einmal aufgerufen
 
     #Erstellen der Datenpunkte für den Plot als Scatter
     alive_end = go.Scatter(

@@ -57,11 +57,7 @@ class Params:
         
             print("Please enter an infection chance (0-100):")
             self.infection_chance = int(input())
-        
-            #print("Please enter a mortality rate (0-100):")
-            #mortality = int(input())
-            #über Statistik eingeführt
-        
+
             print("Please enter a recovery rate (0-100):")
             self.recovery = int(input())
         

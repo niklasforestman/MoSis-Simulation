@@ -12,6 +12,8 @@ The model is based on the SIR-model, combined with additional stages. The progre
 predicted using a parameter fit. After the simulation is completed, the process can be saved and analyzed via an onboard
 Excel tool and an interactive chart.
 
+Main script: simulation.py
+
 
 
 https://www.researchgate.net/publication/220308133_Demographic_and_behavioural_change_during_epidemics/figures?lo=1
